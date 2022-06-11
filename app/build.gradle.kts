@@ -8,21 +8,19 @@ plugins {
     id("kotlin-android")
     id("kotlin-kapt")
     id("org.jmailen.kotlinter")
+    id("de.mannodermaus.android-junit5")
 }
 
 android {
-    compileSdk =31
+    namespace = "com.neilturner.aerialviews"
+    compileSdk = 32
 
     defaultConfig {
         applicationId = "com.neilturner.aerialviews"
         minSdk = 23
-        targetSdk = 31
-        versionCode = 2 // Will be incremented automatically on release
-        versionName = "1.1"
-
-        manifestPlaceholders["analyticsCollectionEnabled"] = false
-        manifestPlaceholders["crashlyticsCollectionEnabled"] = false
-        manifestPlaceholders["performanceCollectionEnabled"] = false
+        targetSdk = 32
+        versionCode = 7 // Will be incremented automatically on release
+        versionName = "1.2.3"
     }
 
     compileOptions {
@@ -44,6 +42,10 @@ android {
             isDebuggable = true
             //isMinifyEnabled = true
             //proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+
+            manifestPlaceholders["analyticsCollectionEnabled"] = false
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = false
+            manifestPlaceholders["performanceCollectionEnabled"] = false
         }
         getByName("release") {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
@@ -63,10 +65,14 @@ android {
         }
         create("beta") {
             dimension = "version"
-            versionNameSuffix = "-beta2"
+            versionNameSuffix = "-beta1"
         }
         create("googleplay") {
             dimension = "version"
+        }
+        create("amazon") {
+            dimension = "version"
+            minSdk = 25
         }
     }
 }
@@ -92,38 +98,36 @@ androidComponents {
 
 dependencies {
     // Kotlin
-    val kotlinVersion = "1.6.10"
+    val kotlinVersion = "1.6.21"
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
 
-    val coroutinesVersion = "1.6.0"
+    val coroutinesVersion = "1.6.2"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
     // Modern Storage
     implementation("com.google.modernstorage:modernstorage-permissions:1.0.0-alpha06")
     implementation("com.google.modernstorage:modernstorage-storage:1.0.0-alpha06")
-    implementation("com.squareup.okio:okio:3.0.0")
 
     // Android X
-    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.leanback:leanback:1.0.0")
     implementation("androidx.leanback:leanback-preference:1.0.0")
     implementation("androidx.preference:preference-ktx:1.2.0")
     implementation("androidx.activity:activity-ktx:1.4.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.3")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:29.0.0"))
-    implementation("com.google.firebase:firebase-analytics-ktx:20.1.0")
-    implementation("com.google.firebase:firebase-crashlytics-ktx:18.2.8")
-    implementation("com.google.firebase:firebase-perf-ktx:20.0.5")
+    implementation("com.google.firebase:firebase-analytics-ktx:21.0.0")
+    implementation("com.google.firebase:firebase-crashlytics-ktx:18.2.11")
+    implementation("com.google.firebase:firebase-perf-ktx:20.1.0")
 
     // GSON
     implementation("com.google.code.gson:gson:2.9.0")
 
     // ExoPlayer
-    implementation("com.google.android.exoplayer:exoplayer-core:2.16.1")
+    implementation("com.google.android.exoplayer:exoplayer-core:2.17.1")
 
     // Kotpref
     implementation("com.chibatching.kotpref:kotpref:2.13.2")
@@ -131,7 +135,21 @@ dependencies {
     implementation("com.chibatching.kotpref:enum-support:2.13.2")
 
     // SMB
-    implementation("com.hierynomus:smbj:0.11.3")
+    implementation("com.hierynomus:smbj:0.11.5")
 
-    //testImplementation("junit:junit:4.13.")
+    // Memory leaks
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
+
+    // Unit testing
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 }
+
+//tasks.withType(Test) {
+//    useJUnitPlatform()
+//    testLogging {
+//        exceptionFormat "full"
+//        events "started", "skipped", "passed", "failed"
+//        showStandardStreams true
+//    }
+//}

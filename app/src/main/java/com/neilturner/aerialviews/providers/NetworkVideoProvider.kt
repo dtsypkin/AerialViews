@@ -3,12 +3,15 @@ package com.neilturner.aerialviews.providers
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import com.hierynomus.msfscc.FileAttributes
+import com.hierynomus.protocol.commons.EnumWithValue
 import com.hierynomus.smbj.SMBClient
 import com.hierynomus.smbj.share.DiskShare
 import com.neilturner.aerialviews.models.prefs.NetworkVideoPrefs
 import com.neilturner.aerialviews.models.videos.AerialVideo
 import com.neilturner.aerialviews.utils.FileHelper
 import com.neilturner.aerialviews.utils.SmbHelper
+import java.net.URLEncoder
 
 class NetworkVideoProvider(context: Context, private val prefs: NetworkVideoPrefs) : VideoProvider(context) {
 
@@ -38,10 +41,10 @@ class NetworkVideoProvider(context: Context, private val prefs: NetworkVideoPref
         networkVideos.forEach { filename ->
             var usernamePassword = ""
             if (prefs.userName.isNotEmpty()) {
-                usernamePassword = prefs.userName
+                usernamePassword = URLEncoder.encode(prefs.userName, "utf-8")
 
                 if (prefs.password.isNotEmpty())
-                    usernamePassword += ":${prefs.password}"
+                    usernamePassword += ":" + URLEncoder.encode(prefs.password, "utf-8")
 
                 usernamePassword += "@"
             }
@@ -74,9 +77,15 @@ class NetworkVideoProvider(context: Context, private val prefs: NetworkVideoPref
         val share = session?.connectShare(shareName) as DiskShare
 
         share.list(path).forEach { item ->
-            if (FileHelper.isVideoFilename(item.fileName)) {
+            val isVideoFilename = FileHelper.isVideoFilename(item.fileName)
+
+            val isFolder = EnumWithValue.EnumUtils.isSet(
+                item.fileAttributes,
+                FileAttributes.FILE_ATTRIBUTE_DIRECTORY
+            )
+
+            if (isVideoFilename && !isFolder)
                 files.add(item.fileName)
-            }
         }
 
         smbClient.close()

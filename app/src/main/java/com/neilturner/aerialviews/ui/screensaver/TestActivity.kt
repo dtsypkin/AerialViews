@@ -2,19 +2,28 @@ package com.neilturner.aerialviews.ui.screensaver
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import com.neilturner.aerialviews.R
 import com.neilturner.aerialviews.models.prefs.GeneralPrefs
 import com.neilturner.aerialviews.utils.WindowHelper
 
 class TestActivity : Activity() {
-    private var videoController: VideoController? = null
+    private lateinit var videoController: VideoController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i(TAG, "onCreate")
+        // Setup
         setTitle(R.string.app_name)
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        Log.i(TAG, "onAttachedToWindow")
+        // Start playback, etc
         videoController = VideoController(this)
-        setContentView(videoController!!.view)
+        setContentView(videoController.view)
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
@@ -35,12 +44,12 @@ class TestActivity : Activity() {
                 KeyEvent.KEYCODE_DPAD_DOWN -> return true
 
                 KeyEvent.KEYCODE_DPAD_LEFT -> {
-                    videoController!!.skipVideo(true)
+                    videoController.skipVideo(true)
                     return true
                 }
 
                 KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                    videoController!!.skipVideo()
+                    videoController.skipVideo()
                     return true
                 }
 
@@ -48,20 +57,29 @@ class TestActivity : Activity() {
                 else -> finish()
             }
         }
-
         return super.dispatchKeyEvent(event)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus && videoController?.view != null) {
-            WindowHelper.hideSystemUI(window, videoController!!.view)
+        if (hasFocus) {
+            WindowHelper.hideSystemUI(window, videoController.view)
         }
     }
 
     override fun onStop() {
-        videoController!!.stop()
         super.onStop()
+        Log.i(TAG, "onStop")
+        // Stop playback, animations, etc
+        if (this::videoController.isInitialized) {
+            videoController.stop()
+        }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        Log.i(TAG, "onDetachedFromWindow")
+        // Remove resources
     }
 
     companion object {

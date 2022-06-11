@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.SurfaceView
 import android.widget.MediaController.MediaPlayerControl
 import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.PlaybackException
@@ -16,27 +15,46 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector.ParametersBuilder
 import com.google.android.exoplayer2.video.VideoSize
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import com.neilturner.aerialviews.models.BufferingStrategy
+import com.neilturner.aerialviews.models.prefs.AppleVideoPrefs
 import com.neilturner.aerialviews.models.prefs.GeneralPrefs
 import com.neilturner.aerialviews.services.SmbDataSourceFactory
 import com.neilturner.aerialviews.utils.FileHelper
+import com.neilturner.aerialviews.utils.PlayerHelper
+import java.lang.Runnable
 import kotlin.math.roundToLong
 
 class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView(context, attrs), MediaPlayerControl, Player.Listener {
-    private val player: ExoPlayer
-    private val bufferingStrategy = BufferingStrategy.valueOf(GeneralPrefs.bufferingStrategy)
-    private val enableTunneling: Boolean = GeneralPrefs.enableTunneling
-    private val exceedRendererCapabilities: Boolean = GeneralPrefs.exceedRenderer
-    private val muteVideo: Boolean = GeneralPrefs.muteVideos
+    private var timerRunnable = Runnable { listener?.onAlmostFinished() }
+    private val enableTunneling = GeneralPrefs.enableTunneling
+    private val exceedRendererCapabilities = GeneralPrefs.exceedRenderer
+    private val muteVideo = GeneralPrefs.muteVideos
+    private var playbackSpeed = GeneralPrefs.playbackSpeed
     private var listener: OnPlayerEventListener? = null
+    private val bufferingStrategy: BufferingStrategy
+    private val player: ExoPlayer
     private var aspectRatio = 0f
     private var prepared = false
-    private var playbackSpeed = GeneralPrefs.playbackSpeed
 
     init {
+        // Use smaller buffer for local and network playback
+        bufferingStrategy = if (!AppleVideoPrefs.enabled) {
+            BufferingStrategy.SMALLER
+        } else {
+            BufferingStrategy.valueOf(GeneralPrefs.bufferingStrategy)
+        }
+
         player = buildPlayer(context)
         player.setVideoSurfaceView(this)
         player.addListener(this)
+    }
+
+    fun release() {
+        player.release()
+        removeCallbacks(timerRunnable) // was causing circular reference if not cleaned up
+        listener = null
     }
 
     fun setUri(uri: Uri?) {
@@ -76,10 +94,6 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
 
     fun setOnPlayerListener(listener: OnPlayerEventListener?) {
         this.listener = listener
-    }
-
-    fun release() {
-        player.release()
     }
 
     /* MediaPlayerControl */
@@ -132,12 +146,12 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
         when (playbackState) {
             Player.STATE_IDLE -> Log.i(TAG, "Player: Idle...") // 1
             Player.STATE_BUFFERING -> Log.i(TAG, "Player: Buffering...") // 2
-            Player.STATE_READY -> Log.i(TAG, "Player: Ready...") // 3
+            Player.STATE_READY -> Log.i(TAG, "Player: Playing...") // 3
             Player.STATE_ENDED -> Log.i(TAG, "Player: Ended...") // 4
         }
         if (!prepared && playbackState == Player.STATE_READY) {
             prepared = true
-            listener!!.onPrepared(this)
+            listener?.onPrepared()
         }
         if (playWhenReady && playbackState == Player.STATE_READY) {
             removeCallbacks(timerRunnable)
@@ -147,13 +161,17 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
     }
 
     override fun onPlayerError(error: PlaybackException) {
-        error.printStackTrace()
         super.onPlayerError(error)
+        // error?.printStackTrace()
+        error.cause?.let { Firebase.crashlytics.recordException(it) }
+        removeCallbacks(timerRunnable)
+        postDelayed({ listener?.onError() }, 3000)
     }
 
     override fun onPlayerErrorChanged(error: PlaybackException?) {
-        error?.printStackTrace()
         super.onPlayerErrorChanged(error)
+        // error?.printStackTrace()
+        error?.message?.let { Log.e(TAG, it) }
     }
 
     override fun onVideoSizeChanged(videoSize: VideoSize) {
@@ -161,57 +179,9 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
         requestLayout()
     }
 
-    private val timerRunnable = Runnable { listener!!.onAlmostFinished(this@ExoPlayerView) }
-
     private fun buildPlayer(context: Context): ExoPlayer {
-        val loadControl: DefaultLoadControl
-        val loadControlBuilder = DefaultLoadControl.Builder()
-
         Log.i(TAG, "Buffering strategy: $bufferingStrategy")
-
-        // Defaults
-        // val minBuffer = 50_000
-        // val maxBuffer = 50_000
-        // val bufferForPlayback = 2500
-        // val bufferForPlaybackAfterRebuffer = 5000
-
-        if (bufferingStrategy == BufferingStrategy.FAST_START) {
-            // Buffer sizes while playing
-            val minBuffer = 5000
-            val maxBuffer = 10_000
-
-            // Initial buffer size to start playback
-            val bufferForPlayback = 1024
-            val bufferForPlaybackAfterRebuffer = 1024
-
-            loadControlBuilder
-                .setBufferDurationsMs(
-                    minBuffer,
-                    maxBuffer,
-                    bufferForPlayback,
-                    bufferForPlaybackAfterRebuffer
-                )
-        }
-
-        if (bufferingStrategy == BufferingStrategy.DRIP_FEED) {
-            // Buffer sizes while playing
-            val minBuffer = 75_000
-            val maxBuffer = 75_000
-
-            // Initial buffer size to start playback
-            val bufferForPlayback = 4000
-            val bufferForPlaybackAfterRebuffer = 8000
-
-            loadControlBuilder
-                .setBufferDurationsMs(
-                    minBuffer,
-                    maxBuffer,
-                    bufferForPlayback,
-                    bufferForPlaybackAfterRebuffer
-                )
-        }
-
-        loadControl = loadControlBuilder.build()
+        val loadControl = PlayerHelper.bufferingStrategy(bufferingStrategy).build()
         val parametersBuilder = ParametersBuilder(context)
 
         if (enableTunneling) {
@@ -233,7 +203,7 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
             .setTrackSelector(trackSelector)
             .build()
 
-        // player.addAnalyticsListener(EventLogger(trackSelector))
+        // player.addAnalyticsListener(com.google.android.exoplayer2.util.EventLogger(trackSelector))
 
         if (muteVideo) {
             player.volume = 0f
@@ -245,13 +215,13 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
     }
 
     interface OnPlayerEventListener {
-        fun onAlmostFinished(view: ExoPlayerView?)
-        fun onPrepared(view: ExoPlayerView?)
-        fun onError(view: ExoPlayerView?)
+        fun onAlmostFinished()
+        fun onError()
+        fun onPrepared()
     }
 
     companion object {
         private const val TAG = "ExoPlayerView"
-        const val DURATION: Long = 800
+        const val DURATION: Long = 1000
     }
 }

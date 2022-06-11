@@ -1,7 +1,6 @@
 package com.neilturner.aerialviews.services
 
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import com.neilturner.aerialviews.R
 import com.neilturner.aerialviews.models.AppleVideoQuality
@@ -25,9 +24,8 @@ class VideoService(private val context: Context) {
     private val providers = mutableListOf<VideoProvider>()
 
     init {
-
         if (LocalVideoPrefs.enabled)
-            providers.add(LocalVideoProvider(context))
+            providers.add(LocalVideoProvider(context, LocalVideoPrefs))
 
         if (NetworkVideoPrefs.enabled)
             providers.add(NetworkVideoProvider(context, NetworkVideoPrefs))
@@ -94,12 +92,7 @@ class VideoService(private val context: Context) {
             }
         }
 
-        if (videos.isEmpty()) {
-            Log.i(TAG, "No videos, adding empty one")
-            videos.add(AerialVideo(Uri.parse(""), ""))
-        }
-
-        if (GeneralPrefs.shuffleVideos)
+        if (!videos.isEmpty() && GeneralPrefs.shuffleVideos)
             videos.shuffle()
 
         Log.i(TAG, "Total vids: ${videos.size}")
@@ -155,33 +148,44 @@ class VideoService(private val context: Context) {
                 null
             }
             if (uri != null)
-                videos.add(AerialVideo(uri, video.location))
+                videos.add(AerialVideo(uri, video.location, video.pointsOfInterest))
         }
-
         return videos
     }
 
     private fun findVideoLocationInManifest(foundVideos: List<AerialVideo>, manifestVideos: List<AerialVideo>): Pair<List<AerialVideo>, List<AerialVideo>> {
         val matched = mutableListOf<AerialVideo>()
         val unmatched = mutableListOf<AerialVideo>()
+        val strings = JsonHelper.parseJsonMap(context, R.raw.tvos15_strings)
 
         for (video in foundVideos) {
             if (!FileHelper.isLocalVideo(video.uri)) {
-                Log.i(TAG, "Ignoring remote video, already has location")
+                // Log.i(TAG, "Ignoring remote Apple video, already has location + POI")
                 matched.add(video)
                 continue
             }
 
-            val filename = video.uri.lastPathSegment!!.lowercase()
-            val videoFound = manifestVideos.find {
-                val manifestFilename = it.uri.lastPathSegment!!.lowercase()
-                manifestFilename.contains(filename)
-            }
+            try {
+                val filename = video.uri.lastPathSegment!!.lowercase()
+                val videoFound = manifestVideos.find {
+                    val manifestFilename = it.uri.lastPathSegment!!.lowercase()
+                    manifestFilename.contains(filename)
+                }
 
-            if (videoFound != null) {
-                matched.add(AerialVideo(video.uri, videoFound.location))
-            } else {
-                unmatched.add(video)
+                if (videoFound != null) {
+                    matched.add(
+                        AerialVideo(
+                            video.uri, videoFound.location,
+                            videoFound.poi.mapValues { poi ->
+                                strings[poi.value] ?: videoFound.location
+                            }
+                        )
+                    )
+                } else {
+                    unmatched.add(video)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, e.message!!)
             }
         }
         return Pair(matched, unmatched)

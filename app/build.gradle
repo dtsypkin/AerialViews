@@ -1,0 +1,150 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: "org.jmailen.kotlinter"
+apply plugin: "de.mannodermaus.android-junit5"
+
+android {
+    namespace 'com.neilturner.aerialviews'
+    compileSdkVersion 32
+
+    defaultConfig {
+        applicationId "com.neilturner.aerialviews"
+        minSdkVersion 23
+        targetSdkVersion 32
+        versionCode 7 // Will be incremented automatically on release
+        versionName "1.2.3"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11
+    }
+
+    buildFeatures {
+        dataBinding true
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+            debuggable true
+
+            //minifyEnabled true
+            //proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            manifestPlaceholders.analyticsCollectionEnabled = false
+            manifestPlaceholders.crashlyticsCollectionEnabled = false
+            manifestPlaceholders.performanceCollectionEnabled = false
+        }
+        release {
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+
+            // Use different keys for different flavors of app
+            productFlavors.all { flavor ->
+                def keystorePropertiesFile = rootProject.file("signing/${flavor.name}.properties")
+                if (keystorePropertiesFile.exists()) {
+                    def keystoreProperties = new Properties()
+                    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+                    flavor.signingConfig = android.signingConfigs.create("${flavor.name}")
+                    flavor.signingConfig.storeFile = rootProject.file(keystoreProperties["storeFile"])
+                    if(!flavor.signingConfig.storeFile.exists()) {
+                        throw new GradleException("Keystore $flavor.signingConfig.storeFile not found!")
+                    }
+                    flavor.signingConfig.storePassword = keystoreProperties["storePassword"]
+                    flavor.signingConfig.keyAlias = keystoreProperties["keyAlias"]
+                    flavor.signingConfig.keyPassword = keystoreProperties["keyPassword"]
+                } else {
+                    println "signing properties file $keystorePropertiesFile not found"
+                }
+            }
+
+            manifestPlaceholders.analyticsCollectionEnabled = true
+            manifestPlaceholders.crashlyticsCollectionEnabled = true
+            manifestPlaceholders.performanceCollectionEnabled = true
+
+            //debuggable true
+        }
+    }
+
+    flavorDimensions "version"
+    productFlavors {
+        create("github") {
+            dimension = "version"
+        }
+        create("beta") {
+            dimension = "version"
+            versionNameSuffix = "-beta1"
+        }
+        create("googleplay") {
+            dimension = "version"
+        }
+        create("amazon") {
+            dimension = "version"
+            minSdkVersion 25
+        }
+    }
+}
+
+dependencies {
+    // Kotlin
+    def coroutines_version = '1.6.2'
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
+
+    // Modern Storage
+    implementation('com.google.modernstorage:modernstorage-permissions:1.0.0-alpha06')
+    implementation('com.google.modernstorage:modernstorage-storage:1.0.0-alpha06')
+
+    // Android X
+    implementation('androidx.core:core-ktx:1.8.0')
+    implementation("androidx.leanback:leanback:1.0.0")
+    implementation("androidx.leanback:leanback-preference:1.0.0")
+    implementation("androidx.preference:preference-ktx:1.2.0")
+    implementation("androidx.activity:activity-ktx:1.4.0")
+    implementation('androidx.constraintlayout:constraintlayout:2.1.4')
+
+    // Firebase
+    implementation('com.google.firebase:firebase-analytics-ktx:21.0.0')
+    implementation('com.google.firebase:firebase-crashlytics-ktx:18.2.11')
+    implementation('com.google.firebase:firebase-perf-ktx:20.1.0')
+
+    // GSON
+    implementation("com.google.code.gson:gson:2.9.0")
+
+    // ExoPlayer
+    implementation("com.google.android.exoplayer:exoplayer-core:2.17.1")
+
+    // Kotpref
+    implementation("com.chibatching.kotpref:kotpref:2.13.2")
+    implementation("com.chibatching.kotpref:initializer:2.13.2")
+    implementation("com.chibatching.kotpref:enum-support:2.13.2")
+
+    // SMB
+    implementation("com.hierynomus:smbj:0.11.5")
+
+    // Memory leaks
+    debugImplementation('com.squareup.leakcanary:leakcanary-android:2.9.1')
+
+    // Unit testing
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+}
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+    testLogging {
+        exceptionFormat "full"
+        events "started", "skipped", "passed", "failed"
+        showStandardStreams true
+    }
+}

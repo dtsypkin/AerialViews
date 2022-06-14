@@ -1,0 +1,140 @@
+<resources>
+    <!-- General -->
+    <string name="app_name">Aerial Views</string>
+    <string name="loading_title">Caricamento…</string>
+    <string name="loading_error">Nessun video trovato, controllare le impostazioni.</string>
+
+    <!-- Categories -->
+    <string name="category_capabilities">Funzionalità</string>
+    <string name="category_settings">Impostazioni</string>
+    <string name="category_video_sources">Sorgenti video</string>
+    <string name="category_video_source">Sorgente video</string>
+    <string name="category_actions">Azioni</string>
+    <string name="category_playlist">Playlist</string>
+    <string name="category_network_settings">Impostazioni di rete</string>
+    <string name="category_local_storage_settings">Impostazioni archivio locale</string>
+    <string name="category_performance_debug">Performance &amp; debug</string>
+
+    <!-- Apple Video Options -->
+    <string name="apple_videos_title">Video Apple TV</string>
+    <string name="apple_videos_summary">Stream diretto dei video apple</string>
+
+    <string name="apple_videos_enabled">Attiva video Apple</string>
+
+    <string name="apple_videos_quality_title">Qualità</string>
+    <string name="apple_videos_quality_summary">Seleziona la qualità video</string>
+
+    <string name="apple_videos_data_usage_title">Utilizzo Dati</string>
+
+    <!-- Any Video Options -->
+    <string name="any_videos_title">Video generici</string>
+    <string name="any_videos_summary">Usa i video dal dispositivo, da USB o da condivisione di rete</string>
+
+    <!-- Local Video Options -->
+    <string name="local_videos_enabled_title">Attiva video locali</string>
+    <string name="local_videos_enabled_summary">Usa i video sul dispositivo o su USB</string>
+
+    <string name="network_videos_enabled_title">Attiva i video dalla rete locale</string>
+    <string name="network_videos_enabled_summary">Usa i video da una condivisione di rete (SMB/Samba)</string>
+
+    <string name="local_videos_filter_enabled_title">Attiva il filtro cartelle</string>
+    <string name="local_videos_filter_enabled_summary">Riproduci i video solo da una specifica cartella o cartelle sul dispositivo, USB, ecc.</string>
+
+    <string name="local_videos_filter_folder_title">Specifica il nome cartella</string>
+    <string name="local_videos_filter_folder_summary">Se i video sono ad es. nella cartella /Videos/Aerial/ specificando \'Aerial\' nasconderà i video dalle altre cartelle</string>
+
+    <string name="any_videos_filename_location_title">Usa il nome file come nome della località</string>
+    <string name="any_videos_filename_location_summary">Ad es. \'Nazione-un_posto.mp4\' diventa \'Nazione - Un Posto\'</string>
+
+    <string name="any_videos_use_apple_manifests_title">Visualizza la località/POI per i video Apple</string>
+    <string name="any_videos_use_apple_manifests_summary">Utilizza le informazioni contenute nei manifest delle varie versioni di tvOS</string>
+
+    <string name="local_videos_filter_test">Testa le impostazioni del filtro</string>
+
+<!--    <string name="any_videos_use_custom_manifests_title">Utilizza manifest di terze parti</string>-->
+<!--    <string name="any_videos_use_custom_manifests_summary">Mostra i nomi delle località usando il manifest selezionato</string>-->
+
+    <string name="any_videos_ignore_non_manifest_videos_title">Ignora i video non Apple trovati nell\'archivio locale o sulla rete locale</string>
+    <string name="any_videos_ignore_non_manifest_videos_summary">Salta i video non contenuti nei manifest Apple</string>
+
+    <!-- Network Video Options -->
+    <string name="network_videos_hostname_title">Nome host</string>
+    <string name="network_videos_hostname_summary">Indirizzo IP del server</string>
+
+    <string name="network_videos_sharename_title">Nome della condivisione</string>
+    <string name="network_videos_sharename_summary">Ad es. /video/aerial</string>
+
+    <string name="network_videos_username_title">Nome utente</string>
+    <string name="network_videos_username_summary">Ozionale</string>
+
+    <string name="network_videos_password_title">Password</string>
+    <string name="network_videos_password_summary">Ozionale</string>
+
+    <string name="network_videos_enable_encryption_title">Abilita crittografia</string>
+    <string name="network_videos_enable_encryption_summary">Abilita la crittografia per le connessioni SMB, può ridurre la velocità di trasferimento</string>
+
+    <string name="network_videos_smb_dialects_title">Seleziona le versioni SMB</string>
+    <string name="network_videos_smb_dialects_summary">Seleziona quali versioni usare del protocollo SMB</string>
+
+    <string name="network_videos_import_export_settings_title">Importa/Esporta impostazioni</string>
+    <string name="network_videos_import_export_settings_summary">Importa o esporta le credenziali SMB nella cartella Downloads</string>
+
+    <string name="network_videos_test_connection">Testa le impostazioni di rete</string>
+
+    <!-- Settings -->
+    <string name="settings_debug_warning">Non cambiare le impostazioni sottostanti se non ci sono problemi!</string>
+
+    <string name="interface_title">Interfaccia</string>
+    <string name="interface_summary">Personalizza l\'aspetto dell\'interfaccia</string>
+
+    <string name="interface_show_clock_title">Mostra l\'orologio</string>
+    <string name="interface_show_clock_summary">Mostra l\'ora corrente sullo schermo</string>
+
+    <string name="interface_show_location_title">Mostra il titolo del video</string>
+    <string name="interface_show_location_summary">Mostra il titolo o la località dei video sullo schermo</string>
+
+    <string name="interface_show_location_style_title">Video Apple</string>
+    <string name="interface_show_location_style_summary">Scegli lo stile di visualizzazione del titolo</string>
+
+    <string name="interface_alt_text_position_title">Alterna la posizione del testo</string>
+    <string name="interface_alt_text_position_summary">Sposta la posizione di orologio e titolo ad ogni cambio video per prevenire il burn-in nei display OLED</string>
+
+    <string name="interface_mute_videos_title">Azzera il volume</string>
+    <string name="interface_mute_videos_summary">Azzera il volume per tutti i video</string>
+
+    <string name="interface_enable_skip_videos_title">Salta al prossimo/precedente video</string>
+    <string name="interface_enable_skip_videos_summary">Salta il video premendo destra o sinistra sul d-pad del telecomando</string>
+
+    <string name="interface_shuffle_videos_title">Riproduzione casuale</string>
+    <string name="interface_shuffle_videos_summary">Riproduci casualmente i video</string>
+
+    <string name="interface_remove_duplicates_title">Rimuovi i duplicati</string>
+    <string name="interface_remove_duplicates_summary">Rimuovi i video con nome duplicato dalla playlist</string>
+
+    <string name="performance_title">Prestazioni &amp; Risoluzione problemi</string>
+    <string name="performance_summary">Per la risoluzione dei problemi</string>
+
+    <string name="performance_enable_tunneling_title">Abilita il tunneling</string>
+    <string name="performance_enable_tunneling_summary">Usa l\'accelerazione hardware, più importante per i video 4K/HDR</string>
+
+    <string name="performance_buffering_strategy_title">Strategia di buffering</string>
+    <string name="performance_buffering_strategy_summary">Cambia le priorità di buffering, può aiutare con connessioni instabili</string>
+
+    <string name="performance_exceed_renderer_title">Eccedi le capacità del renderer</string>
+    <string name="performance_exceed_renderer_summary">Permette di eccedere la risoluzione massima riportata dal renderer - Utile solo per alcuni particolari dispositivi!</string>
+
+    <string name="capabilities_display_title">TV/Schermo</string>
+
+    <string name="capabilities_codecs_title">Lista codec</string>
+
+    <string name="capabilities_decoders_title">Video decoder</string>
+
+    <string name="capabilities_resolution_title">Risoluzione</string>
+
+    <string name="playback_speed_title">Velocità di riproduzione</string>
+    <string name="playback_speed_summary">Scegli la velocità di riproduzione</string>
+
+    <!-- Actions -->
+    <string name="test_screensaver_settings">Testa le impostazioni dello screensaver</string>
+    <string name="open_system_screensaver_options">Apri le impostazioni di sistema dello screensaver</string>
+</resources>

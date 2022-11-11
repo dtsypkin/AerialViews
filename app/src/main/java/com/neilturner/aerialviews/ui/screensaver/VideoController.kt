@@ -48,6 +48,13 @@ class VideoController(private val context: Context) : OnPlayerEventListener {
         loadingText = binding.loadingView.loadingText
         view = binding.root
 
+        // TEST
+        videoView.location.textSize = InterfacePrefs.locationTextSize.toFloat()
+        if (!InterfacePrefs.locationTextShadow) {
+            videoView.location.setShadowLayer(0f,0f,0f,0)
+        }
+
+
         val service = VideoService(context)
         coroutineScope.launch {
             playlist = service.fetchVideos()

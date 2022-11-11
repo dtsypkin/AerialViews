@@ -32,6 +32,21 @@
                     app:summary="@string/interface_show_location_style_summary"
                     app:dialogTitle="@string/interface_show_location_style_summary" />
 
+                <ListPreference
+                    app:defaultValue="18f"
+                    app:entries="@array/test_location_text_size_entries"
+                    app:entryValues="@array/test_location_text_size_values"
+                    app:key="test_location_text_size"
+                    app:title="Location text size"
+                    app:summary="..."
+                    app:dialogTitle="" />
+
+                <CheckBoxPreference
+                    app:defaultValue="true"
+                    app:key="test_location_text_shadow"
+                    app:summary="..."
+                    app:title="Enabled location text shadow" />
+
         </PreferenceCategory>
 
         <PreferenceCategory app:title="@string/category_playlist">

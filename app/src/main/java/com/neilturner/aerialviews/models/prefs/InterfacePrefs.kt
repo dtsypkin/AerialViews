@@ -12,4 +12,7 @@ object InterfacePrefs : KotprefModel() {
     var showLocation by booleanPref(true, "show_location")
     var showLocationStyle by enumValuePref(LocationStyle.SHORT, "show_location_style")
     var alternateTextPosition by booleanPref(false, "alt_text_position")
+
+    var locationTextSize by stringPref("18", "test_location_text_size")
+    var locationTextShadow by booleanPref(true, "test_location_text_shadow")
 }

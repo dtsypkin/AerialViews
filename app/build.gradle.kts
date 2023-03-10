@@ -11,16 +11,21 @@ plugins {
     id("de.mannodermaus.android-junit5")
 }
 
+@Suppress("UnstableApiUsage")
 android {
     namespace = "com.neilturner.aerialviews"
     compileSdk = 33
 
     defaultConfig {
         applicationId = "com.neilturner.aerialviews"
-        minSdk = 23
+        minSdk = 22 // to support Fire OS 5, Android v5.1, Lvl 22
         targetSdk = 33
-        versionCode = 7 // Will be incremented automatically on release
-        versionName = "1.2.3"
+        versionCode = 11
+        versionName = "1.4.1"
+
+        manifestPlaceholders["analyticsCollectionEnabled"] = false
+        manifestPlaceholders["crashlyticsCollectionEnabled"] = false
+        manifestPlaceholders["performanceCollectionEnabled"] = false
     }
 
     compileOptions {
@@ -43,9 +48,6 @@ android {
             //isMinifyEnabled = true
             //proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
 
-            manifestPlaceholders["analyticsCollectionEnabled"] = false
-            manifestPlaceholders["crashlyticsCollectionEnabled"] = false
-            manifestPlaceholders["performanceCollectionEnabled"] = false
         }
         getByName("release") {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
@@ -145,11 +147,12 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 }
 
-//tasks.withType(Test) {
-//    useJUnitPlatform()
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 //    testLogging {
 //        exceptionFormat "full"
 //        events "started", "skipped", "passed", "failed"
 //        showStandardStreams true
 //    }
-//}
+}

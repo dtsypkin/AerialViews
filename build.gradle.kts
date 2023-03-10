@@ -1,7 +1,7 @@
 val kotlinVersion: String by project
 
 buildscript {
-    val kotlinVersion = "1.8.0"
+    val kotlinVersion = "1.8.10"
 
     repositories {
         mavenCentral()

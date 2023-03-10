@@ -1,6 +1,8 @@
 package com.neilturner.aerialviews.ui.screensaver
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.Typeface
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,10 +14,12 @@ import com.neilturner.aerialviews.databinding.AerialActivityBinding
 import com.neilturner.aerialviews.databinding.VideoViewBinding
 import com.neilturner.aerialviews.models.LocationStyle
 import com.neilturner.aerialviews.models.VideoPlaylist
+import com.neilturner.aerialviews.models.prefs.GeneralPrefs
 import com.neilturner.aerialviews.models.prefs.InterfacePrefs
 import com.neilturner.aerialviews.models.videos.AerialVideo
 import com.neilturner.aerialviews.services.VideoService
 import com.neilturner.aerialviews.ui.screensaver.ExoPlayerView.OnPlayerEventListener
+import com.neilturner.aerialviews.utils.DeviceHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,7 +34,7 @@ class VideoController(private val context: Context) : OnPlayerEventListener {
     private var canSkip = false
     private val videoView: VideoViewBinding
     private val loadingView: View
-    private val loadingText: TextView
+    private var loadingText: TextView
     val view: View
 
     init {
@@ -47,10 +51,24 @@ class VideoController(private val context: Context) : OnPlayerEventListener {
         val service = VideoService(context)
         coroutineScope.launch {
             playlist = service.fetchVideos()
-            if (playlist.size > 0)
+            Log.i(TAG, "Playlist items: ${playlist.size}")
+            if (playlist.size > 0) {
                 loadVideo(videoView, playlist.nextVideo())
-            else
-                showLoadingError()
+            } else {
+
+                showLoadingError(context)
+            }
+        }
+
+        if (DeviceHelper.isFireTV()) {
+            val newColor = Color.parseColor("#e9e9e9")
+            val newFont = Typeface.create("sans-serif-light", Typeface.NORMAL)
+
+            loadingText.setTextColor(newColor)
+            loadingText.typeface = newFont
+
+            binding.videoView0.location.setTextColor(newColor)
+            binding.videoView0.location.typeface = newFont
         }
     }
 
@@ -64,8 +82,17 @@ class VideoController(private val context: Context) : OnPlayerEventListener {
         fadeOutCurrentVideo()
     }
 
-    private fun showLoadingError() {
-        loadingText.text = R.string.loading_error.toString()
+    fun increaseSpeed() {
+        videoView.videoView.increaseSpeed()
+    }
+
+    fun decreaseSpeed() {
+        videoView.videoView.decreaseSpeed()
+    }
+
+    private fun showLoadingError(context: Context) {
+        val res = context.resources!!
+        loadingText.text = res.getString(R.string.loading_error)
     }
 
     private fun fadeOutLoading() {
@@ -85,7 +112,7 @@ class VideoController(private val context: Context) : OnPlayerEventListener {
         loadingView
             .animate()
             .alpha(1f)
-            .setDuration(ExoPlayerView.DURATION)
+            .setDuration(ExoPlayerView.FADE_DURATION)
             .withStartAction {
                 loadingView.visibility = View.VISIBLE
             }
@@ -110,8 +137,9 @@ class VideoController(private val context: Context) : OnPlayerEventListener {
     }
 
     private fun fadeInNextVideo() {
-        if (loadingView.visibility == View.GONE)
+        if (loadingView.visibility == View.GONE) {
             return
+        }
 
         if (loadingText.visibility == View.VISIBLE) {
             fadeOutLoading()
@@ -120,7 +148,7 @@ class VideoController(private val context: Context) : OnPlayerEventListener {
         loadingView
             .animate()
             .alpha(0f)
-            .setDuration(ExoPlayerView.DURATION)
+            .setDuration(ExoPlayerView.FADE_DURATION)
             .withEndAction {
                 loadingView.visibility = View.GONE
                 canSkip = true
@@ -179,9 +207,14 @@ class VideoController(private val context: Context) : OnPlayerEventListener {
         fadeOutCurrentVideo()
     }
 
-    override fun onError() {
-        val message = "Error while trying to play ${currentVideo.uri}"
+    override fun onPlaybackSpeedChanged() {
+        val message = "Playback speed changed to: ${GeneralPrefs.playbackSpeed}x"
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onError() {
+        // val message = "Error while trying to play ${currentVideo.uri}"
+        // Toast.makeText(context, message, Toast.LENGTH_LONG).show()
 
         if (loadingView.visibility == View.VISIBLE) {
             loadVideo(videoView, playlist.nextVideo())

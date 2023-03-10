@@ -4,7 +4,6 @@ package com.neilturner.aerialviews.ui.settings
 
 import android.os.Bundle
 import android.util.Log
-import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.neilturner.aerialviews.R
@@ -12,6 +11,7 @@ import com.neilturner.aerialviews.services.CodecType
 import com.neilturner.aerialviews.services.HDRFormat
 import com.neilturner.aerialviews.services.getCodecs
 import com.neilturner.aerialviews.services.getDisplay
+import com.neilturner.aerialviews.utils.DeviceHelper
 
 class CapabilitiesFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -20,15 +20,26 @@ class CapabilitiesFragment : PreferenceFragmentCompat() {
     }
 
     private fun updateCapabilities() {
-        val display = findPreference<ListPreference>("capabilities_display") as Preference
-        val resolution = findPreference<ListPreference>("capabilities_resolution") as Preference
-        val codecs = findPreference<ListPreference>("capabilities_codecs") as Preference
-        val decoders = findPreference<ListPreference>("capabilities_decoders") as Preference
+        val device = findPreference<Preference>("capabilities_device")
+        val display = findPreference<Preference>("capabilities_display")
+        val resolution = findPreference<Preference>("capabilities_resolution")
+        val codecs = findPreference<Preference>("capabilities_codecs")
+        val decoders = findPreference<Preference>("capabilities_decoders")
 
-        display.summary = buildDisplaySummary()
-        codecs.summary = buildCodecSummary()
-        decoders.summary = buildDecoderSummary()
-        resolution.summary = buildResolutionSummary()
+        device?.summary = buildDeviceSummary()
+        display?.summary = buildDisplaySummary()
+        codecs?.summary = buildCodecSummary()
+        decoders?.summary = buildDecoderSummary()
+        resolution?.summary = buildResolutionSummary()
+    }
+
+    private fun buildDeviceSummary(): String {
+        var summary = ""
+
+        summary += "Model: ${DeviceHelper.deviceName()}\n"
+        summary += "Android: ${DeviceHelper.androidVersion()}"
+
+        return summary
     }
 
     private fun buildDisplaySummary(): String {
@@ -38,10 +49,12 @@ class CapabilitiesFragment : PreferenceFragmentCompat() {
 
         val display = getDisplay(activity)
         if (display.supportsHDR && display.hdrFormats.isNotEmpty()) {
-            if (display.hdrFormats.contains(HDRFormat.DOLBY_VISION))
+            if (display.hdrFormats.contains(HDRFormat.DOLBY_VISION)) {
                 supportsDolbyVision = "Yes"
-            if (display.hdrFormats.contains(HDRFormat.HDR10))
+            }
+            if (display.hdrFormats.contains(HDRFormat.HDR10)) {
                 supportsHDR10 = "Yes"
+            }
         }
 
         summary += "Supports HDR10: $supportsHDR10\n"
@@ -66,14 +79,17 @@ class CapabilitiesFragment : PreferenceFragmentCompat() {
         var foundDolbyVision = "Not Found"
 
         getCodecs().forEach { codec ->
-            if (isCodecOfType(codec.mimeTypes, "avc"))
+            if (isCodecOfType(codec.mimeTypes, "avc")) {
                 foundAVC = "Found"
+            }
 
-            if (isCodecOfType(codec.mimeTypes, "hevc"))
+            if (isCodecOfType(codec.mimeTypes, "hevc")) {
                 foundHEVC = "Found"
+            }
 
-            if (isCodecOfType(codec.mimeTypes, "dolby"))
+            if (isCodecOfType(codec.mimeTypes, "dolby")) {
                 foundDolbyVision = "Found"
+            }
         }
 
         summary += "AVC: $foundAVC\n"
@@ -90,8 +106,9 @@ class CapabilitiesFragment : PreferenceFragmentCompat() {
             it.codingFunction == CodecType.DECODER && isVideoCodec(it.mimeTypes)
         }
 
-        if (allCodecs.isNotEmpty())
+        if (allCodecs.isNotEmpty()) {
             summary = allCodecs.joinToString(", ", "", "", -1, "") { it.name }
+        }
 
         Log.i("", "Decoders found: ${allCodecs.count()}")
         return summary
@@ -106,7 +123,7 @@ class CapabilitiesFragment : PreferenceFragmentCompat() {
                         it.contains("dolby", true)
                     )
         }
-        return videoCodecs.count() > 0
+        return videoCodecs.isNotEmpty()
     }
 
     private fun isCodecOfType(codecs: Array<String>, type: String): Boolean {
@@ -114,6 +131,6 @@ class CapabilitiesFragment : PreferenceFragmentCompat() {
             it.contains("video", true) &&
                 it.contains(type, true)
         }
-        return videoCodecs.count() > 0
+        return videoCodecs.isNotEmpty()
     }
 }

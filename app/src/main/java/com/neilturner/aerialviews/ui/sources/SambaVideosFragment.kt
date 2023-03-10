@@ -1,10 +1,11 @@
 @file:Suppress("unused", "BlockingMethodInNonBlockingContext")
 
-package com.neilturner.aerialviews.ui.settings
+package com.neilturner.aerialviews.ui.sources
 
 import android.Manifest
 import android.content.SharedPreferences
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -18,6 +19,8 @@ import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import com.google.modernstorage.permissions.StoragePermissions
 import com.google.modernstorage.storage.AndroidFileSystem
 import com.google.modernstorage.storage.toOkioPath
@@ -42,7 +45,7 @@ import java.io.ByteArrayInputStream
 import java.util.Properties
 
 @Suppress("DEPRECATION")
-class NetworkVideosFragment :
+class SambaVideosFragment :
     PreferenceFragmentCompat(),
     PreferenceManager.OnPreferenceTreeClickListener,
     SharedPreferences.OnSharedPreferenceChangeListener {
@@ -52,7 +55,7 @@ class NetworkVideosFragment :
     private lateinit var requestWritePermission: ActivityResultLauncher<String>
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.settings_network_videos, rootKey)
+        setPreferencesFromResource(R.xml.sources_samba_videos, rootKey)
         preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
 
         fileSystem = AndroidFileSystem(requireContext())
@@ -97,8 +100,9 @@ class NetworkVideosFragment :
     }
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
-        if (preference.key.isNullOrEmpty())
+        if (preference.key.isNullOrEmpty()) {
             return super.onPreferenceTreeClick(preference)
+        }
 
         if (preference.key.contains("network_videos_test_connection")) {
             lifecycleScope.launch {
@@ -122,21 +126,21 @@ class NetworkVideosFragment :
     }
 
     private fun limitTextInput() {
-        preferenceScreen.findPreference<EditTextPreference>("network_videos_hostname")?.setOnBindEditTextListener { it.setSingleLine() }
-        preferenceScreen.findPreference<EditTextPreference>("network_videos_sharename")?.setOnBindEditTextListener { it.setSingleLine() }
-        preferenceScreen.findPreference<EditTextPreference>("network_videos_username")?.setOnBindEditTextListener { it.setSingleLine() }
-        preferenceScreen.findPreference<EditTextPreference>("network_videos_password")?.setOnBindEditTextListener { it.setSingleLine() }
+        preferenceScreen.findPreference<EditTextPreference>("samba_videos_hostname")?.setOnBindEditTextListener { it.setSingleLine() }
+        preferenceScreen.findPreference<EditTextPreference>("samba_videos_sharename")?.setOnBindEditTextListener { it.setSingleLine() }
+        preferenceScreen.findPreference<EditTextPreference>("samba_videos_username")?.setOnBindEditTextListener { it.setSingleLine() }
+        preferenceScreen.findPreference<EditTextPreference>("samba_videos_password")?.setOnBindEditTextListener { it.setSingleLine() }
     }
 
     private fun importExportSettings() {
         AlertDialog.Builder(requireContext()).apply {
-            setTitle(R.string.network_videos_import_export_settings_title)
-            setMessage(R.string.network_videos_import_export_settings_summary)
-            setNeutralButton("Cancel", null)
-            setNegativeButton("Import") { _, _ ->
+            setTitle(R.string.samba_videos_import_export_settings_title)
+            setMessage(R.string.samba_videos_import_export_settings_summary)
+            setNeutralButton(R.string.button_cancel, null)
+            setNegativeButton(R.string.button_import) { _, _ ->
                 checkImportPermissions()
             }
-            setPositiveButton("Export") { _, _ ->
+            setPositiveButton(R.string.button_export) { _, _ ->
                 checkExportPermissions()
             }
             create().show()
@@ -147,12 +151,16 @@ class NetworkVideosFragment :
         val canReadFiles = storagePermissions.hasAccess(
             action = StoragePermissions.Action.READ,
             types = listOf(StoragePermissions.FileType.Document),
-            createdBy = StoragePermissions.CreatedBy.AllApps
+            createdBy = StoragePermissions.CreatedBy.Self
         )
 
         if (!canReadFiles) {
             Log.i(TAG, "Asking for permission")
-            requestReadPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                requestReadPermission.launch(Manifest.permission.READ_MEDIA_VIDEO)
+            } else {
+                requestReadPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
         } else {
             lifecycleScope.launch {
                 importSettings()
@@ -162,16 +170,15 @@ class NetworkVideosFragment :
 
     @Suppress("BlockingMethodInNonBlockingContext") // code runs inside Dispatcher.IO
     private suspend fun importSettings() = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Importing settings from Downloads folder")
+        Log.i(TAG, "Importing SMB settings from Downloads folder")
 
-        val filename = "aerial-views-smb-settings.txt"
         val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
-        val uri = Uri.parse("$directory/$filename")
+        val uri = Uri.parse("$directory/$SMB_SETTINGS_FILENAME")
         val path = uri.toOkioPath()
         val properties = Properties()
 
         if (!FileHelper.fileExists(uri)) {
-            showDialog("Import failed", "Can't find SMB settings file in Downloads folder: $filename")
+            showDialog("Import failed", "Can't find SMB settings file in Downloads folder: $SMB_SETTINGS_FILENAME")
             return@withContext
         }
 
@@ -182,8 +189,10 @@ class NetworkVideosFragment :
                     properties.load(ByteArrayInputStream(byteArray))
                 }
             }
-        } catch (e: Exception) {
+        } catch (ex: Exception) {
             showDialog("Import failed", "Error while reading and parsing file. Please check the file again for mistakes or invalid characters.")
+            Log.e(TAG, "Import failed", ex)
+            ex.cause?.let { Firebase.crashlytics.recordException(it) }
             return@withContext
         }
 
@@ -194,6 +203,8 @@ class NetworkVideosFragment :
             NetworkVideoPrefs.password = properties["password"] as String
         } catch (ex: Exception) {
             showDialog("Import failed", "Unable to save imported settings")
+            Log.e(TAG, "Import failed", ex)
+            ex.cause?.let { Firebase.crashlytics.recordException(it) }
             return@withContext
         }
 
@@ -204,15 +215,14 @@ class NetworkVideosFragment :
             preferenceScreen.findPreference<EditTextPreference>("network_videos_password")?.text = NetworkVideoPrefs.password
         }
 
-        Log.i(TAG, properties.toString())
-        showDialog("Import successful", "SMB settings successfully imported from $filename")
+        showDialog("Import successful", "SMB settings successfully imported from $SMB_SETTINGS_FILENAME")
     }
 
     private fun checkExportPermissions() {
         val canWriteFiles = storagePermissions.hasAccess(
             action = StoragePermissions.Action.READ_AND_WRITE,
             types = listOf(StoragePermissions.FileType.Document),
-            createdBy = StoragePermissions.CreatedBy.AllApps
+            createdBy = StoragePermissions.CreatedBy.Self
         )
 
         if (!canWriteFiles) {
@@ -226,26 +236,26 @@ class NetworkVideosFragment :
     }
 
     private suspend fun exportSettings() = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Exporting settings to Downloads folder")
+        Log.i(TAG, "Exporting SMB settings to Downloads folder")
 
-        // Build SMB config string
+        // Build SMB config list
         val smbSettings = mutableMapOf<String, String>()
         smbSettings["hostname"] = NetworkVideoPrefs.hostName
         smbSettings["sharename"] = NetworkVideoPrefs.shareName
         smbSettings["username"] = NetworkVideoPrefs.userName
         smbSettings["password"] = NetworkVideoPrefs.password
 
-        val filename = "aerial-views-smb-settings.txt"
         val uri: Uri
         try {
             // Prep file handle
             uri = fileSystem.createMediaStoreUri(
-                filename = filename,
+                filename = SMB_SETTINGS_FILENAME,
                 collection = MediaStore.Files.getContentUri("external"),
                 directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
             )!!
         } catch (ex: Exception) {
-            showDialog("Export failed", "The SMB settings file $filename already exists in the Downloads folder")
+            showDialog("Export failed", "The SMB settings file $SMB_SETTINGS_FILENAME already exists in the Downloads folder")
+            Log.e(TAG, "Export failed", ex)
             return@withContext
         }
 
@@ -261,16 +271,17 @@ class NetworkVideosFragment :
                 }
             }
         } catch (ex: Exception) {
-            showDialog("Export failed", "Error while trying to write SMB settings to $filename in the Downloads folder")
+            showDialog("Export failed", "Error while trying to write SMB settings to $SMB_SETTINGS_FILENAME in the Downloads folder")
+            Log.e(TAG, "Export failed", ex)
+            ex.cause?.let { Firebase.crashlytics.recordException(it) }
             return@withContext
         }
 
-        showDialog("Export successful", "Successfully exported SMB settings to $filename in the Downloads folder")
+        showDialog("Export successful", "Successfully exported SMB settings to $SMB_SETTINGS_FILENAME in the Downloads folder")
     }
 
     @Suppress("BlockingMethodInNonBlockingContext") // ran on an IO/background context
     private suspend fun testNetworkConnection() = withContext(Dispatchers.IO) {
-
         // Check hostname
         val validIpAddress = Patterns.IP_ADDRESS.matcher(NetworkVideoPrefs.hostName).matches()
         if (!validIpAddress) {
@@ -285,8 +296,8 @@ class NetworkVideosFragment :
         try {
             config = SmbHelper.buildSmbConfig()
         } catch (e: Exception) {
-            Log.e(TAG, e.message!!)
-            val message = "Failed to create SMB config...\n\n${e.message!!}"
+            Log.e(TAG, e.message.toString())
+            val message = "Failed to create SMB config...\n\n${e.message}"
             showDialog("Connection error", message)
             return@withContext
         }
@@ -297,8 +308,8 @@ class NetworkVideosFragment :
         try {
             connection = smbClient.connect(NetworkVideoPrefs.hostName)
         } catch (e: Exception) {
-            Log.e(TAG, e.message!!)
-            val message = "Hostname error: ${NetworkVideoPrefs.hostName}...\n\n${e.message!!}"
+            Log.e(TAG, e.message.toString())
+            val message = "Hostname error: ${NetworkVideoPrefs.hostName}...\n\n${e.message}"
             showDialog("Connection error", message)
             return@withContext
         }
@@ -312,7 +323,7 @@ class NetworkVideosFragment :
             val authContext = SmbHelper.buildAuthContext(NetworkVideoPrefs.userName, NetworkVideoPrefs.password, NetworkVideoPrefs.domainName)
             session = connection?.authenticate(authContext)
         } catch (e: Exception) {
-            Log.e(TAG, e.message!!)
+            Log.e(TAG, e.message.toString())
             val message = "Authentication failed. Please check the username and password, or server settings if using anonymous login"
             showDialog("Connection error", message)
             return@withContext
@@ -331,7 +342,7 @@ class NetworkVideosFragment :
             val shareAccess = hashSetOf<SMB2ShareAccess>()
             shareAccess.add(SMB2ShareAccess.ALL.iterator().next())
         } catch (e: Exception) {
-            Log.e(TAG, e.message!!)
+            Log.e(TAG, e.message.toString())
             val message = "Unable to connect to share: $shareName. Please check the spelling of the share name or the server permissions."
             showDialog("Connection error", message)
             return@withContext
@@ -360,7 +371,7 @@ class NetworkVideosFragment :
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, e.message!!)
+            Log.e(TAG, e.message.toString())
             val message = "Unable to list files from: $shareName. Please check server permissions for this share."
             showDialog("Connection error", message)
             return@withContext
@@ -382,7 +393,7 @@ class NetworkVideosFragment :
         try {
             smbClient.close()
         } catch (e: Exception) {
-            Log.e(TAG, e.message!!)
+            Log.e(TAG, e.message.toString())
             return@withContext
         }
         Log.i(TAG, "Finished SMB connection test")
@@ -392,12 +403,13 @@ class NetworkVideosFragment :
         AlertDialog.Builder(requireContext()).apply {
             setTitle(title)
             setMessage(message)
-            setPositiveButton("OK", null)
+            setPositiveButton(R.string.button_ok, null)
             create().show()
         }
     }
 
     companion object {
-        private const val TAG = "NetworkVideosFragment"
+        private const val TAG = "SambaVideosFragment"
+        private const val SMB_SETTINGS_FILENAME = "aerial-views-smb-settings.txt"
     }
 }

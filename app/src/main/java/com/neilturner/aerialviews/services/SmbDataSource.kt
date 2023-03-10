@@ -14,6 +14,7 @@ import com.hierynomus.smbj.SMBClient
 import com.hierynomus.smbj.share.DiskShare
 import com.hierynomus.smbj.share.File
 import com.neilturner.aerialviews.utils.SmbHelper
+import com.neilturner.aerialviews.utils.toStringOrEmpty
 import java.io.EOFException
 import java.io.IOException
 import java.io.InputStream
@@ -57,7 +58,7 @@ class SmbDataSource : BaseDataSource(true) {
         try {
             remoteFile = openNetworkFile()
         } catch (e: Exception) {
-            Log.e(TAG, e.message!!)
+            Log.e(TAG, e.message.toString())
             return 0
         }
 
@@ -96,7 +97,7 @@ class SmbDataSource : BaseDataSource(true) {
 
     private fun parseCredentials(dataSpec: DataSpec) {
         val uri = dataSpec.uri
-        hostName = uri.host!!
+        hostName = uri.host.toStringOrEmpty()
 
         val userInfo = SmbHelper.parseUserInfo(uri)
         userName = userInfo.first
@@ -119,15 +120,18 @@ class SmbDataSource : BaseDataSource(true) {
         shareAccess.add(SMB2ShareAccess.ALL.iterator().next())
 
         return share.openFile(
-            path, EnumSet.of(AccessMask.GENERIC_READ),
-            null, shareAccess, SMB2CreateDisposition.FILE_OPEN, null
+            path,
+            EnumSet.of(AccessMask.GENERIC_READ),
+            null,
+            shareAccess,
+            SMB2CreateDisposition.FILE_OPEN,
+            null
         )
     }
 
-    @Suppress("NAME_SHADOWING")
     @Throws(IOException::class)
-    private fun readInternal(buffer: ByteArray, offset: Int, readLength: Int): Int {
-        var readLength = readLength
+    private fun readInternal(buffer: ByteArray, offset: Int, _readLength: Int): Int {
+        var readLength = _readLength
 
         if (readLength == 0) {
             return 0

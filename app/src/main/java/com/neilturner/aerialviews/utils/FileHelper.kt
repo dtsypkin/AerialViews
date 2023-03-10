@@ -1,4 +1,7 @@
-@file:Suppress("unused", "unused")
+@file:Suppress(
+    "unused",
+    "unused"
+)
 
 package com.neilturner.aerialviews.utils
 
@@ -49,39 +52,45 @@ object FileHelper {
     }
 
     fun isVideoFilename(filename: String): Boolean {
-        if (filename.startsWith(".")) // Ignore hidden files
+        if (filename.startsWith(".")) {
+            // Ignore hidden files
             return false
+        }
 
-        if (filename.endsWith(".mov") ||
-            filename.endsWith(".mp4") ||
-            filename.endsWith(".webm") ||
-            filename.endsWith(".mkv")
-        )
+        if (filename.endsWith(".mov", true) ||
+            filename.endsWith(".mp4", true) ||
+            filename.endsWith(".m4v", true) ||
+            filename.endsWith(".webm", true) ||
+            filename.endsWith(".mkv", true) ||
+            filename.endsWith(".ts", true)
+        ) {
             return true
+        }
 
         return false
     }
 
-    @Suppress("NAME_SHADOWING")
-    fun shouldFilter(uri: Uri, folder: String): Boolean {
-        if (folder.isEmpty())
+    fun shouldFilter(uri: Uri, _folder: String): Boolean {
+        if (_folder.isEmpty() || _folder.isBlank()) {
             return false
+        }
 
-        var folder = if (folder.first() != '/') "/$folder" else folder
+        var folder = if (_folder.first() != '/') "/$_folder" else _folder
         folder = if (folder.last() != '/') "$folder/" else folder
 
-        // Log.i(TAG, "Looking for $folder in ${uri.path}")
-        return !uri.path!!.contains(folder, true)
+        Log.i(TAG, "Looking for $folder in ${uri.path}")
+        return !uri.path.toStringOrEmpty().contains(folder, true)
     }
 
     fun filenameToTitleCase(uri: Uri): String {
-        val filename = uri.lastPathSegment!!
+        val filename = uri.lastPathSegment.toStringOrEmpty()
         val index = filename.lastIndexOf(".")
 
         // some.video.mov -> some.video
         var location = filename
-        if (index > 0)
+        if (index > 0) {
             location = filename.substring(0, index)
+        }
 
         // somevideo -> Somevideo
         // city-place_video -> City - Place Video

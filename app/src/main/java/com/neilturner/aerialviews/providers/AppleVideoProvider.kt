@@ -19,7 +19,8 @@ class AppleVideoProvider(context: Context, private val prefs: AppleVideoPrefs) :
         wrapper.assets?.forEach {
             videos.add(
                 AerialVideo(
-                    it.uri(quality)!!, it.location,
+                    it.uri(quality)!!,
+                    it.location,
                     it.pointsOfInterest.mapValues { poi ->
                         strings[poi.value] ?: it.location
                     }
@@ -27,7 +28,7 @@ class AppleVideoProvider(context: Context, private val prefs: AppleVideoPrefs) :
             )
         }
 
-        Log.i(TAG, "tvOS: ${videos.count()} $quality videos found")
+        Log.i(TAG, "${videos.count()} $quality videos found")
         return videos
     }
 

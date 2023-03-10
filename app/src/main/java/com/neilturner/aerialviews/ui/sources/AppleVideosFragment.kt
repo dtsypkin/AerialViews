@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.neilturner.aerialviews.ui.settings
+package com.neilturner.aerialviews.ui.sources
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -14,7 +14,7 @@ class AppleVideosFragment :
     SharedPreferences.OnSharedPreferenceChangeListener {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.settings_apple_videos, rootKey)
+        setPreferencesFromResource(R.xml.sources_apple_videos, rootKey)
         preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
         updateSummaries()
     }
@@ -29,15 +29,16 @@ class AppleVideosFragment :
     }
 
     private fun updateSummaries() {
-        val quality = findPreference<ListPreference>("apple_videos_quality") as ListPreference
-        val qualityTitle = context?.getString(R.string.apple_videos_quality_title)
-        quality.title = "$qualityTitle - ${quality.entry}"
+        val res = context?.resources!!
+        val quality = findPreference<ListPreference>("apple_videos_quality")
+        val qualityTitle = res.getString(R.string.videos_quality_title)
+        quality?.title = "$qualityTitle - ${quality?.entry}"
 
-        val dataUsage = findPreference<Preference>("apple_videos_data_usage") as Preference
-        val index = quality.findIndexOfValue(quality.value)
-        val bitrates = context?.resources?.getStringArray(R.array.apple_videos_data_usage_values)
-        val bitrate = bitrates?.get(index)
+        val dataUsage = findPreference<Preference>("apple_videos_data_usage")
+        val index = quality?.findIndexOfValue(quality.value)
+        val bitrates = res.getStringArray(R.array.apple_videos_data_usage_values)
+        val bitrate = index?.let { bitrates[it] }
 
-        dataUsage.summary = "Approx. $bitrate per hour"
+        dataUsage?.summary = String.format(res.getString(R.string.apple_videos_data_estimate_summary), bitrate)
     }
 }

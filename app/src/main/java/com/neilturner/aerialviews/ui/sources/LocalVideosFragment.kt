@@ -1,10 +1,11 @@
 @file:Suppress("unused")
 
-package com.neilturner.aerialviews.ui.settings
+package com.neilturner.aerialviews.ui.sources
 
 import android.Manifest
 import android.content.SharedPreferences
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,12 +22,14 @@ import com.google.modernstorage.permissions.StoragePermissions.FileType
 import com.neilturner.aerialviews.R
 import com.neilturner.aerialviews.models.prefs.LocalVideoPrefs
 import com.neilturner.aerialviews.models.videos.AerialVideo
+import com.neilturner.aerialviews.utils.DeviceHelper
 import com.neilturner.aerialviews.utils.FileHelper
+import com.neilturner.aerialviews.utils.toStringOrEmpty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class AnyVideosFragment :
+class LocalVideosFragment :
     PreferenceFragmentCompat(),
     PreferenceManager.OnPreferenceTreeClickListener,
     SharedPreferences.OnSharedPreferenceChangeListener {
@@ -34,7 +37,7 @@ class AnyVideosFragment :
     private lateinit var requestPermission: ActivityResultLauncher<String>
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.settings_any_videos, rootKey)
+        setPreferencesFromResource(R.xml.sources_local_videos, rootKey)
         preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
 
         storagePermissions = StoragePermissions(requireContext())
@@ -47,6 +50,7 @@ class AnyVideosFragment :
         }
 
         limitTextInput()
+        showNoticeIfNeeded()
     }
 
     override fun onDestroy() {
@@ -55,23 +59,25 @@ class AnyVideosFragment :
     }
 
     override fun onResume() {
-        val canReadVideos = storagePermissions.hasAccess(
-            action = Action.READ,
-            types = listOf(FileType.Video),
-            createdBy = StoragePermissions.CreatedBy.AllApps
-        )
-
-        if (!canReadVideos &&
-            requiresPermission()
-        ) {
-            resetPreference()
-        }
+//        val canReadVideos = storagePermissions.hasAccess(
+//            action = Action.READ,
+//            types = listOf(FileType.Video),
+//            createdBy = StoragePermissions.CreatedBy.AllApps
+//        )
+//
+//        if (!canReadVideos &&
+//            requiresPermission()
+//        ) {
+//            Log.i(TAG, "Reset pref. on resume")
+//            resetPreference()
+//        }
         super.onResume()
     }
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
-        if (preference.key.isNullOrEmpty())
+        if (preference.key.isNullOrEmpty()) {
             return super.onPreferenceTreeClick(preference)
+        }
 
         if (preference.key.contains("local_videos_test_filter")) {
             lifecycleScope.launch {
@@ -87,7 +93,6 @@ class AnyVideosFragment :
         if (key == "local_videos_enabled" &&
             requiresPermission()
         ) {
-
             val canReadVideos = storagePermissions.hasAccess(
                 action = Action.READ,
                 types = listOf(FileType.Video),
@@ -95,13 +100,18 @@ class AnyVideosFragment :
             )
 
             if (!canReadVideos) {
-                requestPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    requestPermission.launch(Manifest.permission.READ_MEDIA_VIDEO)
+                } else {
+                    requestPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                }
             }
         }
     }
 
     private fun limitTextInput() {
-        preferenceScreen.findPreference<EditTextPreference>("local_videos_filter_folder_name")?.setOnBindEditTextListener { it.setSingleLine() }
+        val textPref = preferenceScreen.findPreference<EditTextPreference>("local_videos_filter_folder_name")
+        textPref?.setOnBindEditTextListener { it.setSingleLine() }
     }
 
     private suspend fun testLocalVideosFilter() {
@@ -119,7 +129,7 @@ class AnyVideosFragment :
 
         for (video in localVideos) {
             val uri = Uri.parse(video)
-            val filename = uri.lastPathSegment!!
+            val filename = uri.lastPathSegment.toStringOrEmpty()
 
             if (!FileHelper.isVideoFilename(filename)) {
                 // Log.i(TAG, "Probably not a video: $filename")
@@ -161,12 +171,20 @@ class AnyVideosFragment :
         AlertDialog.Builder(requireContext()).apply {
             setTitle(title)
             setMessage(message)
-            setPositiveButton("OK", null)
+            setPositiveButton(R.string.button_ok, null)
             create().show()
         }
     }
 
+    private fun showNoticeIfNeeded() {
+        if (!DeviceHelper.isNvidaShield()) {
+            return
+        }
+        val notice = findPreference<Preference>("local_videos_notice")
+        notice?.isVisible = true
+    }
+
     companion object {
-        private const val TAG = "AnyVideosFragment"
+        private const val TAG = "LocalVideosFragment"
     }
 }

@@ -1,3 +1,5 @@
+@file:Suppress("JoinDeclarationAndAssignment")
+
 package com.neilturner.aerialviews.ui.screensaver
 
 import android.content.Context
@@ -13,10 +15,8 @@ import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector.ParametersBuilder
 import com.google.android.exoplayer2.video.VideoSize
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
+import com.neilturner.aerialviews.R
 import com.neilturner.aerialviews.models.BufferingStrategy
 import com.neilturner.aerialviews.models.prefs.AppleVideoPrefs
 import com.neilturner.aerialviews.models.prefs.GeneralPrefs
@@ -27,13 +27,16 @@ import java.lang.Runnable
 import kotlin.math.roundToLong
 
 class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView(context, attrs), MediaPlayerControl, Player.Listener {
-    private var timerRunnable = Runnable { listener?.onAlmostFinished() }
+    private var almostFinishedRunnable = Runnable { listener?.onAlmostFinished() }
+    private var canChangePlaybackSpeedRunnable = Runnable { canChangePlaybackSpeed = true }
+    private var onErrorRunnable = Runnable { listener?.onError() }
     private val enableTunneling = GeneralPrefs.enableTunneling
     private val exceedRendererCapabilities = GeneralPrefs.exceedRenderer
     private val muteVideo = GeneralPrefs.muteVideos
     private var playbackSpeed = GeneralPrefs.playbackSpeed
     private var listener: OnPlayerEventListener? = null
     private val bufferingStrategy: BufferingStrategy
+    private var canChangePlaybackSpeed = true
     private val player: ExoPlayer
     private var aspectRatio = 0f
     private var prepared = false
@@ -53,7 +56,9 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
 
     fun release() {
         player.release()
-        removeCallbacks(timerRunnable) // was causing circular reference if not cleaned up
+        removeCallbacks(almostFinishedRunnable)
+        removeCallbacks(canChangePlaybackSpeedRunnable)
+        removeCallbacks(onErrorRunnable)
         listener = null
     }
 
@@ -80,13 +85,11 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
         super.onDetachedFromWindow()
     }
 
-    @Suppress("NAME_SHADOWING")
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        var widthMeasureSpec = widthMeasureSpec
+    override fun onMeasure(_widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        var widthMeasureSpec = _widthMeasureSpec
         if (aspectRatio > 0) {
-            val newWidth: Int
-            val newHeight: Int = MeasureSpec.getSize(heightMeasureSpec)
-            newWidth = (newHeight * aspectRatio).toInt()
+            val newHeight = MeasureSpec.getSize(heightMeasureSpec)
+            val newWidth = (newHeight * aspectRatio).toInt()
             widthMeasureSpec = MeasureSpec.makeMeasureSpec(newWidth, MeasureSpec.EXACTLY)
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -142,30 +145,102 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
     }
 
     /* EventListener */
-    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+    override fun onPlaybackStateChanged(playbackState: Int) {
         when (playbackState) {
-            Player.STATE_IDLE -> Log.i(TAG, "Player: Idle...") // 1
-            Player.STATE_BUFFERING -> Log.i(TAG, "Player: Buffering...") // 2
-            Player.STATE_READY -> Log.i(TAG, "Player: Playing...") // 3
-            Player.STATE_ENDED -> Log.i(TAG, "Player: Ended...") // 4
+            Player.STATE_IDLE -> Log.i(TAG, "Idle...") // 1
+            Player.STATE_BUFFERING -> Log.i(TAG, "Buffering...") // 2
+            Player.STATE_READY -> Log.i(TAG, "Playing...") // 3
+            Player.STATE_ENDED -> Log.i(TAG, "Playback ended...") // 4
         }
         if (!prepared && playbackState == Player.STATE_READY) {
             prepared = true
             listener?.onPrepared()
         }
-        if (playWhenReady && playbackState == Player.STATE_READY) {
-            removeCallbacks(timerRunnable)
-            // compensate the duration based on the playback speed
-            postDelayed(timerRunnable, ((duration / GeneralPrefs.playbackSpeed.toFloat()).roundToLong() - DURATION))
+        if (player.playWhenReady && playbackState == Player.STATE_READY) {
+            setupAlmostFinishedRunnable()
         }
+    }
+
+    fun increaseSpeed() {
+        changeSpeed(true)
+    }
+
+    fun decreaseSpeed() {
+        changeSpeed(false)
+    }
+
+    private fun changeSpeed(increase: Boolean) {
+        if (!canChangePlaybackSpeed) {
+            return
+        }
+
+        if (!prepared || !player.isPlaying) {
+            return // Must be playing a video
+        }
+
+        if (player.currentPosition <= 3) {
+            return // No speed change at the start of the video
+        }
+
+        if (duration - player.currentPosition <= 3) {
+            return // No speed changes at the end of video
+        }
+
+        canChangePlaybackSpeed = false
+        postDelayed(canChangePlaybackSpeedRunnable, 2000)
+
+        val currentSpeed = GeneralPrefs.playbackSpeed
+        val speedValues = resources.getStringArray(R.array.playback_speed_values)
+        val currentSpeedIdx = speedValues.indexOf(currentSpeed)
+
+        if (!increase && currentSpeedIdx == 0) {
+            return // we are at minimum speed already
+        }
+
+        if (increase && currentSpeedIdx == speedValues.size - 1) {
+            return // we are at maximum speed already
+        }
+
+        val newSpeed = if (increase) {
+            speedValues[currentSpeedIdx + 1]
+        } else {
+            speedValues[currentSpeedIdx - 1]
+        }
+
+        GeneralPrefs.playbackSpeed = newSpeed
+        player.setPlaybackSpeed(newSpeed.toFloat())
+
+        setupAlmostFinishedRunnable()
+        listener?.onPlaybackSpeedChanged()
+    }
+
+    private fun setupAlmostFinishedRunnable() {
+        removeCallbacks(almostFinishedRunnable)
+
+        // Check if we need to limit the duration of the video
+        var targetDuration = duration
+        val limit = GeneralPrefs.maxVideoLength.toInt()
+        if (limit >= 10 &&
+            limit > duration
+        ) {
+            targetDuration = limit * 1000
+        }
+
+        // compensate the duration based on the playback speed
+        // take into account the current player position in case of speed changes during playback
+        var delay = (((targetDuration - player.currentPosition) / GeneralPrefs.playbackSpeed.toFloat()).roundToLong() - FADE_DURATION)
+        if (delay < 0) {
+            delay = 0
+        }
+        postDelayed(almostFinishedRunnable, delay)
     }
 
     override fun onPlayerError(error: PlaybackException) {
         super.onPlayerError(error)
         // error?.printStackTrace()
-        error.cause?.let { Firebase.crashlytics.recordException(it) }
-        removeCallbacks(timerRunnable)
-        postDelayed({ listener?.onError() }, 3000)
+        // error.cause?.let { Firebase.crashlytics.recordException(it) }
+        removeCallbacks(almostFinishedRunnable)
+        postDelayed(onErrorRunnable, 3000)
     }
 
     override fun onPlayerErrorChanged(error: PlaybackException?) {
@@ -182,7 +257,7 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
     private fun buildPlayer(context: Context): ExoPlayer {
         Log.i(TAG, "Buffering strategy: $bufferingStrategy")
         val loadControl = PlayerHelper.bufferingStrategy(bufferingStrategy).build()
-        val parametersBuilder = ParametersBuilder(context)
+        val parametersBuilder = DefaultTrackSelector.Parameters.Builder(context)
 
         if (enableTunneling) {
             parametersBuilder
@@ -218,10 +293,11 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
         fun onAlmostFinished()
         fun onError()
         fun onPrepared()
+        fun onPlaybackSpeedChanged()
     }
 
     companion object {
         private const val TAG = "ExoPlayerView"
-        const val DURATION: Long = 1000
+        const val FADE_DURATION: Long = 1000
     }
 }

@@ -4,11 +4,13 @@ package com.neilturner.aerialviews.ui.screensaver
 
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
 import android.view.SurfaceView
 import android.widget.MediaController.MediaPlayerControl
 import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.DefaultRenderersFactory
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.PlaybackException
@@ -21,9 +23,11 @@ import com.neilturner.aerialviews.models.BufferingStrategy
 import com.neilturner.aerialviews.models.prefs.AppleVideoPrefs
 import com.neilturner.aerialviews.models.prefs.GeneralPrefs
 import com.neilturner.aerialviews.services.SmbDataSourceFactory
+import com.neilturner.aerialviews.utils.CustomRendererFactory
 import com.neilturner.aerialviews.utils.FileHelper
+import com.neilturner.aerialviews.utils.PhilipsMediaCodecAdapterFactory
 import com.neilturner.aerialviews.utils.PlayerHelper
-import java.lang.Runnable
+import com.neilturner.aerialviews.utils.WindowHelper
 import kotlin.math.roundToLong
 
 class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView(context, attrs), MediaPlayerControl, Player.Listener {
@@ -32,6 +36,8 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
     private var onErrorRunnable = Runnable { listener?.onError() }
     private val enableTunneling = GeneralPrefs.enableTunneling
     private val exceedRendererCapabilities = GeneralPrefs.exceedRenderer
+    private val useRefreshRateSwitching = GeneralPrefs.refreshRateSwitching
+    private val philipsDolbyVisionFix = GeneralPrefs.philipsDolbyVisionFix
     private val muteVideo = GeneralPrefs.muteVideos
     private var playbackSpeed = GeneralPrefs.playbackSpeed
     private var listener: OnPlayerEventListener? = null
@@ -52,6 +58,13 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
         player = buildPlayer(context)
         player.setVideoSurfaceView(this)
         player.addListener(this)
+
+        // https://medium.com/androiddevelopers/prep-your-tv-app-for-android-12-9a859d9bb967
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && useRefreshRateSwitching) {
+            Log.i(TAG, "Android 12, handle frame rate switching in app")
+            player.videoChangeFrameRateStrategy = C.VIDEO_CHANGE_FRAME_RATE_STRATEGY_OFF
+        }
     }
 
     fun release() {
@@ -69,7 +82,9 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
         player.stop()
         prepared = false
         val mediaItem = MediaItem.fromUri(uri)
-
+        if (philipsDolbyVisionFix) {
+            PhilipsMediaCodecAdapterFactory.mediaUrl = uri.toString()
+        }
         if (FileHelper.isNetworkVideo(uri)) {
             val mediaSource = ProgressiveMediaSource.Factory(SmbDataSourceFactory())
                 .createMediaSource(mediaItem)
@@ -152,12 +167,36 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
             Player.STATE_READY -> Log.i(TAG, "Playing...") // 3
             Player.STATE_ENDED -> Log.i(TAG, "Playback ended...") // 4
         }
+
         if (!prepared && playbackState == Player.STATE_READY) {
             prepared = true
             listener?.onPrepared()
         }
+
         if (player.playWhenReady && playbackState == Player.STATE_READY) {
+            if (useRefreshRateSwitching) {
+                setRefreshRate()
+            }
             setupAlmostFinishedRunnable()
+        }
+    }
+
+    private fun setRefreshRate() {
+        val frameRate = player.videoFormat?.frameRate
+        val surface = this.holder.surface
+
+        if (frameRate == null || frameRate == 0f) {
+            Log.i(TAG, "Unable to get video frame rate...")
+            return
+        }
+
+        Log.i(TAG, "${frameRate}fps video, setting refresh rate if needed...")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Log.i(TAG, "Android 12")
+            WindowHelper.setRefreshRate(context, surface, display, frameRate)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Log.i(TAG, "Not Android 12")
+            WindowHelper.setLegacyRefreshRate(context, frameRate)
         }
     }
 
@@ -216,9 +255,19 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
 
     private fun setupAlmostFinishedRunnable() {
         removeCallbacks(almostFinishedRunnable)
+
+        // Check if we need to limit the duration of the video
+        var targetDuration = duration
+        val limit = GeneralPrefs.maxVideoLength.toInt()
+        if (limit >= 10 &&
+            limit > duration
+        ) {
+            targetDuration = limit * 1000
+        }
+
         // compensate the duration based on the playback speed
         // take into account the current player position in case of speed changes during playback
-        var delay = (((duration - player.currentPosition) / GeneralPrefs.playbackSpeed.toFloat()).roundToLong() - DURATION)
+        var delay = (((targetDuration - player.currentPosition) / GeneralPrefs.playbackSpeed.toFloat()).roundToLong() - FADE_DURATION)
         if (delay < 0) {
             delay = 0
         }
@@ -263,9 +312,15 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
         val trackSelector = DefaultTrackSelector(context)
         trackSelector.parameters = parametersBuilder.build()
 
+        var rendererFactory = DefaultRenderersFactory(context)
+        if (philipsDolbyVisionFix) {
+            rendererFactory = CustomRendererFactory(context)
+        }
+
         val player = ExoPlayer.Builder(context)
             .setLoadControl(loadControl)
             .setTrackSelector(trackSelector)
+            .setRenderersFactory(rendererFactory)
             .build()
 
         // player.addAnalyticsListener(com.google.android.exoplayer2.util.EventLogger(trackSelector))
@@ -288,6 +343,6 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
 
     companion object {
         private const val TAG = "ExoPlayerView"
-        const val DURATION: Long = 1000
+        const val FADE_DURATION: Long = 1000
     }
 }

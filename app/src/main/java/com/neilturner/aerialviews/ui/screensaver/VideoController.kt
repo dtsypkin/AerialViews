@@ -6,13 +6,14 @@ import android.graphics.Typeface
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.Window
 import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.neilturner.aerialviews.R
 import com.neilturner.aerialviews.databinding.AerialActivityBinding
 import com.neilturner.aerialviews.databinding.VideoViewBinding
-import com.neilturner.aerialviews.models.LocationStyle
+import com.neilturner.aerialviews.models.LocationType
 import com.neilturner.aerialviews.models.VideoPlaylist
 import com.neilturner.aerialviews.models.prefs.GeneralPrefs
 import com.neilturner.aerialviews.models.prefs.InterfacePrefs
@@ -24,7 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class VideoController(private val context: Context) : OnPlayerEventListener {
+class VideoController(private val context: Context, private val window: Window) : OnPlayerEventListener {
     private var currentPositionProgressHandler: (() -> Unit)? = null
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     private lateinit var playlist: VideoPlaylist
@@ -40,7 +41,8 @@ class VideoController(private val context: Context) : OnPlayerEventListener {
     init {
         val inflater = LayoutInflater.from(context)
         val binding = DataBindingUtil.inflate(inflater, R.layout.aerial_activity, null, false) as AerialActivityBinding
-        binding.textPrefs = InterfacePrefs
+        binding.interfacePrefs = InterfacePrefs
+        binding.showLocation = InterfacePrefs.showLocation != LocationType.OFF
         binding.videoView0.videoView.setOnPlayerListener(this)
 
         videoView = binding.videoView0
@@ -119,7 +121,7 @@ class VideoController(private val context: Context) : OnPlayerEventListener {
         loadingView
             .animate()
             .alpha(1f)
-            .setDuration(ExoPlayerView.DURATION)
+            .setDuration(ExoPlayerView.FADE_DURATION)
             .withStartAction {
                 loadingView.visibility = View.VISIBLE
             }
@@ -155,7 +157,7 @@ class VideoController(private val context: Context) : OnPlayerEventListener {
         loadingView
             .animate()
             .alpha(0f)
-            .setDuration(ExoPlayerView.DURATION)
+            .setDuration(ExoPlayerView.FADE_DURATION)
             .withEndAction {
                 loadingView.visibility = View.GONE
                 canSkip = true
@@ -165,14 +167,19 @@ class VideoController(private val context: Context) : OnPlayerEventListener {
     private fun loadVideo(videoBinding: VideoViewBinding, video: AerialVideo) {
         Log.i(TAG, "Playing: ${video.location} - ${video.uri} (${video.poi})")
         currentVideo = video
-        videoBinding.location.text = if (InterfacePrefs.showLocationStyle == LocationStyle.VERBOSE) video.poi[0]?.replace("\n", " ") ?: video.location else video.location
+        videoBinding.location.text = if (InterfacePrefs.showLocation == LocationType.POI) {
+            video.poi[0]?.replace("\n", " ") ?: video.location
+        } else {
+            video.location
+        }
+
         if (videoBinding.location.text.isBlank()) {
             videoBinding.location.visibility = View.GONE
-        } else if (InterfacePrefs.showLocation) {
+        } else if (InterfacePrefs.showLocation != LocationType.OFF) {
             videoBinding.location.visibility = View.VISIBLE
         }
 
-        if (InterfacePrefs.showLocationStyle == LocationStyle.VERBOSE && video.poi.size > 1) { // everything else is static anyways
+        if (InterfacePrefs.showLocation == LocationType.POI && video.poi.size > 1) { // everything else is static anyways
             val poiTimes = video.poi.keys.sorted()
             var lastPoi = 0
 

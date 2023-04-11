@@ -16,17 +16,6 @@
         <item>VIDEO_4K_HDR</item>
     </string-array>
     <string name="apple_videos_quality_default" translatable="false">VIDEO_1080_SDR</string>
-
-    <string-array name="interface_show_location_style_entries">
-        <item>Short titles</item>
-        <item>Points of interest (Localised)</item>
-    </string-array>
-    <string-array name="interface_show_location_style_values" translatable="false">
-        <item>SHORT</item>
-        <item>VERBOSE</item>
-    </string-array>
-    <string name="interface_show_location_style_default" translatable="false">SHORT</string>
-
     <string-array name="apple_videos_data_usage_values" translatable="false">
         <item>37GB</item>
         <item>23GB</item>
@@ -35,6 +24,33 @@
         <item>90GB</item>
     </string-array>
 
+    <!-- Community Videos -->
+    <string-array name="comm1_videos_quality_entries" translatable="false">
+        <item>1080p H.264</item>
+        <item>1080p HEVC</item>
+        <item>4K HEVC</item>
+    </string-array>
+    <string-array name="comm1_videos_quality_values" translatable="false">
+        <item>VIDEO_1080_H264</item>
+        <item>VIDEO_1080_SDR</item>
+        <item>VIDEO_4K_SDR</item>
+    </string-array>
+    <string name="comm1_videos_quality_default" translatable="false">VIDEO_1080_SDR</string>
+
+    <!-- Video title or POI -->
+    <string-array name="interface_show_location_entries">
+        <item>Off</item>
+        <item>Location or title</item>
+        <item>Points of interest (available in many languages)</item>
+    </string-array>
+    <string-array name="interface_show_location_values" translatable="false">
+        <item>OFF</item>
+        <item>TITLE</item>
+        <item>POI</item>
+    </string-array>
+    <string name="interface_show_location_default" translatable="false">POI</string>
+
+    <!-- Playback speed -->
     <string-array name="playback_speed_entries" translatable="false">
         <item>0.25x</item>
         <item>0.5x</item>
@@ -96,6 +112,40 @@
         <item>27</item>
         <item>28</item>
     </string-array>
+    <!-- Max. video length -->
+    <string-array name="playback_max_video_length_entries" translatable="false">
+        <item>No limit (default)</item>
+        <item>10 sec</item>
+        <item>20 sec</item>
+        <item>30 sec</item>
+        <item>1 min</item>
+        <item>2 min</item>
+        <item>3 min</item>
+        <item>4 min</item>
+        <item>5 min</item>
+        <item>6 min</item>
+        <item>7 min</item>
+        <item>8 min</item>
+        <item>9 min</item>
+        <item>10 min</item>
+    </string-array>
+    <string-array name="playback_max_video_length_values" translatable="false">
+        <item>0</item>
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+        <item>180</item>
+        <item>240</item>
+        <item>300</item>
+        <item>360</item>
+        <item>420</item>
+        <item>480</item>
+        <item>540</item>
+        <item>600</item>
+    </string-array>
+    <string name="playback_max_video_length_default" translatable="false">0</string>
 
     <!-- Network Video Options -->
     <string-array name="network_videos_smb_dialects_entries" translatable="false">
@@ -120,7 +170,7 @@
         <item>SMB_2_0_2</item>
     </string-array>
 
-    <!-- Performance & Debug Options -->
+    <!-- Troubleshooting options -->
     <string-array name="performance_buffering_strategy_entries">
         <item>Default</item>
         <item>Larger buffer</item>

@@ -1,50 +1,71 @@
 <resources>
     <!-- General -->
     <string name="loading_title">Wird geladen…</string>
-    <string name="loading_error">Keine Videos gefunden, bitte überprüfen Sie Ihre Einstellungen</string>
+    <string name="loading_error">Keine Videos gefunden, bitte überprüfe deine Einstellungen</string>
 
-    <!-- Buttons -->
+    <!-- Common Buttons -->
     <string name="button_ok">OK</string>
     <string name="button_cancel">Abbrechen</string>
     <string name="button_import">Importieren</string>
     <string name="button_export">Exportieren</string>
 
-    <!-- Categories -->
-    <string name="category_capabilities">TV-Funktionen</string>
-    <string name="category_settings">Einstellungen</string>
-    <string name="category_video_sources">Video-Quellen</string>
-    <string name="category_video_source">Video-Quelle</string>
+    <!-- Common Categories -->
     <string name="category_actions">Aktionen</string>
-    <string name="category_playlist">Wiedergabeliste</string>
-    <string name="category_network_settings">Netzwerkeinstellungen</string>
-    <string name="category_local_storage_settings">Lokale Speichereinstellungen</string>
-    <string name="category_performance_debug">Performance &amp; Debugging</string>
+    <string name="category_video_source">Video-Quelle</string>
 
-    <!-- Apple Video Options -->
-    <string name="apple_videos_title">Apple TV Videos</string>
-    <string name="apple_videos_summary">Direktes Streaming der Apple Videos</string>
+    <!-- Common Prefs/Options -->
+    <string name="videos_quality_title">Video quality</string>
+    <string name="videos_quality_summary">Videoqualität auswählen</string>
 
-    <string name="apple_videos_enabled">Nutze Apple Videos</string>
+    <!-- Main -->
+    <string name="settings_video_sources_title">Video-Quellen</string>
+    <string name="settings_video_sources_summary">Videos aus dem Internet, von USB-Speichern und Netzwerkquellen abspielen</string>
 
-    <string name="apple_videos_quality_title">Qualität</string>
-    <string name="apple_videos_quality_summary">Videoqualität auswählen</string>
+    <string name="settings_settings_title">Einstellungen</string>
+    <string name="settings_settings_summary">Leistung, Wiedergabeliste und Aussehen anpassen</string>
+
+    <string name="settings_preview_screensaver">Teste die Einstellungen des Bildschirmschoners</string>
+    <string name="settings_system_options">Öffne die Systemeinstellungen des Bildschirmschoners</string>
+
+    <!-- Main / Video Sources -->
+    <string name="category_remote">Internet</string>
+    <string name="category_local">Lokal</string>
+    <string name="category_network">Netzwerk</string>
+
+    <string name="sources_apple_title">Videos von Apple</string>
+    <string name="sources_apple_summary">Streame Videos von Apple über deine Internetverbindung</string>
+
+    <string name="sources_comm1_title">Videos von Jetson Creative</string>
+    <string name="sources_comm1_summary">Streame Videos von Jetson Creative über deine Internetverbindung</string>
+
+    <string name="sources_comm2_title">Videos von Robin Fourcade</string>
+    <string name="sources_comm2_summary">Streame Videos von Robin Fourcade über deine Internetverbindung</string>
+
+    <string name="sources_local_title">Lokaler oder USB-Speicher</string>
+    <string name="sources_local_summary">Videos direkt vom Gerät oder angeschlossenen USB-Speichern abspielen</string>
+
+    <string name="sources_samba_title">Sambafreigabe (SMB)</string>
+    <string name="sources_samba_summary">Videos aus lokaler Netzwerkfreigabe von PC- oder NAS-Geräten abspielen</string>
+
+    <string name="sources_webdav_title">WebDAV-Server</string>
+    <string name="sources_webdav_summary">Videos von einem WebDAV-Server abspielen (Lokal oder Internet)</string>
+
+    <!-- Main / Video Sources / Apple videos -->
+    <string name="apple_videos_enabled">Nutze Videos von Apple</string>
 
     <string name="apple_videos_data_usage_title">Datenverbrauch</string>
     <string name="apple_videos_data_estimate_summary">Ca. %1$s pro Stunde</string>
 
-    <!-- Any Video Options -->
-    <string name="any_videos_title">Alle Videos</string>
-    <string name="any_videos_summary">Verwende alle verfügbaren Videos vom Gerätespeicher, USB oder lokalem Netzwerk</string>
+    <!-- Main / Video Sources / Comm1 videos -->
+    <string name="comm1_videos_enabled">Nutze Community-Videos</string>
 
-    <string name="any_videos_credentials_title">Credentials</string>
-    <string name="any_videos_credentials_summary">Server- und Zugangsdaten für SMB-Zugriff</string>
+    <!-- Main / Video Sources / Comm2 videos -->
+    <string name="comm2_videos_enabled">Nutze Community-Videos</string>
 
-    <!-- Local Video Options -->
-    <string name="local_videos_enabled_title">Nutze lokale Videos</string>
-    <string name="local_videos_enabled_summary">Verwende alle verfügbaren Videos vom Gerätespeicher / USB</string>
+    <!-- Main / Video Sources / Local+USB videos -->
+    <string name="category_folder_filter">Verzeichnisfilter</string>
 
-    <string name="network_videos_enabled_title">Nutze Videos aus Netzwerkfreigabe</string>
-    <string name="network_videos_enabled_summary">Verwende alle verfügbaren Videos aus einer lokalen Netzwerkfreigabe (SMB/Samba)</string>
+    <string name="local_videos_enabled_title">Nutze lokal gespeicherte Videos (Gerätespeicher oder USB)</string>
 
     <string name="local_videos_notice_title">"Nvidia Shield"-Nutzer: Bitte folgende Option aktivieren…</string>
     <string name="local_videos_notice_summary">Einstellungen > Geräteeinstellungen > Speicher > Automatisch nach Medien durchsuchen</string>
@@ -53,75 +74,120 @@
     <string name="local_videos_filter_enabled_summary">Verwende nur Videos aus bestimmten Ordnern (Gerätespeicher / USB / Netzwerk)</string>
 
     <string name="local_videos_filter_folder_title">Verzeichnisnamen einstellen</string>
-    <string name="local_videos_filter_folder_summary">Beispiel: \'Aerial\' spielt nur Videos aus dem Verzeichnis /Downloads/Aerial/ ab &amp; ignoriert andere Ordner</string>
-
-    <string name="any_videos_filename_location_title">Nutze Dateinamen als Ortsangabe</string>
-    <string name="any_videos_filename_location_summary">Beispiel: \'Stadt-ein_ort.mp4\' wird als \'Stadt - Ein Ort\' angezeigt</string>
-
-    <string name="any_videos_use_apple_manifests_title">Orte / Sehenswürdigkeiten für passende Apple Videos anzeigen</string>
-    <string name="any_videos_use_apple_manifests_summary">Nutzt die Video-Manifeste verschiedener Versionen von tvOS</string>
+    <string name="local_videos_filter_folder_summary">Speicherst du Videos zum Beispiel unter /Videos/Aerial/ wird \'Aerial\' Videos anderer Ordner herausfiltern</string>
 
     <string name="local_videos_filter_test">Teste Filtereinstellungen</string>
 
-    <string name="any_videos_ignore_non_manifest_videos_title">Ignoriere nicht von Apple stammende Videos aus lokalen Speichern oder Netzwerken</string>
-    <string name="any_videos_ignore_non_manifest_videos_summary">Überspringe Videos die nicht in Video-Manifesten von Apple vorkommen</string>
+    <!-- Main / Video Sources / Samba videos -->
+    <string name="category_server_details">Serverdetails und Zugangsdaten</string>
 
-    <!-- Network Video Options -->
-    <string name="network_videos_hostname_title">Hostname</string>
-    <string name="network_videos_hostname_summary">IP-Adresse des Servers</string>
+    <string name="samba_videos_enabled_title">Nutze Videos aus Sambafreigaben (SMB)</string>
 
-    <string name="network_videos_sharename_title">Name der Netzwerkfreigabe</string>
-    <string name="network_videos_sharename_summary">Beispiel: /video/aerial</string>
+    <string name="samba_videos_hostname_title">Hostname</string>
+    <string name="samba_videos_hostname_summary">IP-Adresse des Servers</string>
 
-    <string name="network_videos_username_title">Benutzername</string>
-    <string name="network_videos_username_summary">Optional</string>
+    <string name="samba_videos_sharename_title">Name der Freigabe</string>
+    <string name="samba_videos_sharename_summary">Beispiel: /video/aerial</string>
 
-    <string name="network_videos_password_title">Passwort</string>
-    <string name="network_videos_password_summary">Optional</string>
+    <string name="samba_videos_username_title">Benutzername</string>
+    <string name="samba_videos_username_summary">Optional</string>
 
-    <string name="network_videos_enable_encryption_title">Verschlüsselung aktivieren</string>
-    <string name="network_videos_enable_encryption_summary">Verschlüsselte SMB-Verbindung aktivieren (reduziert evtl. Netzwerkgeschwindigkeit)</string>
+    <string name="samba_videos_password_title">Passwort</string>
+    <string name="samba_videos_password_summary">Optional</string>
 
-    <string name="network_videos_smb_dialects_title">SMB-Protokolldialekte wählen</string>
-    <string name="network_videos_smb_dialects_summary">Verwendete Version des SMB-Protokolls auswählen</string>
+    <string name="samba_videos_import_export_settings_title">Einstellungen Sichern / Wiederherstellen</string>
+    <string name="samba_videos_import_export_settings_summary">SMB-Zugangsdaten im Downloadordner Sichern oder daraus Wiederherstellen</string>
 
-    <string name="network_videos_import_export_settings_title">Einstellungen Sichern / Wiederherstellen</string>
-    <string name="network_videos_import_export_settings_summary">SMB-Zugangsdaten im Downloadordner Sichern oder daraus Wiederherstellen</string>
+    <string name="samba_videos_test_connection">Teste Verbindungseinstellungen</string>
 
-    <string name="network_videos_test_connection">Teste Verbindungseinstellungen</string>
+    <!-- Main / Video Sources / WebDAV videos -->
 
-    <!-- Settings -->
-    <string name="settings_debug_warning">Die untenstehenden Optionen sollten nur bei auftretenden Problemen geändert werden!</string>
+    <!-- Main / Settings -->
+    <string name="category_settings">Einstellungen</string>
 
-    <string name="interface_title">Interface</string>
-    <string name="interface_summary">Konfiguriere das Aussehen</string>
+    <string name="settings_appearance_title">Aussehen</string>
+    <string name="settings_appearance_summary">Aussehen während der Wiedergabe anpassen</string>
+
+    <string name="settings_playlist_title">Wiedergabeliste</string>
+    <string name="settings_playlist_summary">Videos stummschalten, Reihenfolge ändern und mehr</string>
+
+    <string name="settings_dpad_title">D-Pad / Fernbedienung</string>
+    <string name="settings_dpad_summary">Aktionen des D-Pads deiner Fernbedienung anpassen</string>
+
+    <string name="settings_capabilities_title">Fähigkeiten des Geräts</string>
+    <string name="settings_capabilities_summary">Video-Codecs, Auflösungen und andere Fähigkeiten ansehen</string>
+
+    <string name="settings_troubleshooting_title">Problembehebung</string>
+    <string name="settings_troubleshooting_summary">Leistungs- &amp; Debug-Einstellungen zur Problembehebung</string>
+
+    <string name="settings_about_title">Über</string>
+    <string name="settings_about_summary">Version, build info, etc</string>
+
+    <string name="settings_import_export_settings_title">Einstellungen Sichern / Wiederherstellen</string>
+    <string name="settings_import_export_settings_summary">Einstellungen im Downloadordner Sichern oder daraus Wiederherstellen</string>
+
+    <!-- Main / Settings / Appearance -->
+    <string name="category_appearance">Aussehen</string>
+
+    <string name="interface_alt_text_position_title">Alternative Textposition</string>
+    <string name="interface_alt_text_position_summary">Position von Uhr und Standort nach jedem Video ändern um Einbrennen zu verhindern (OLED)</string>
 
     <string name="interface_show_clock_title">Zeige Uhr</string>
     <string name="interface_show_clock_summary">Zeigt die aktuelle Zeit</string>
 
-    <string name="interface_show_location_title">Zeige Videotitel</string>
-    <string name="interface_show_location_summary">Zeigt einen Titel oder Standort des laufenden Videos an</string>
+    <string name="interface_show_location_title">Show video location, title or points of interest</string>
 
-    <string name="interface_show_location_style_title">Apple Videos</string>
-    <string name="interface_show_location_style_summary">Wähle den Stil des Videotitels</string>
+    <string name="any_videos_filename_location_title">Nutze Dateinamen als Ortsangabe</string>
+    <string name="any_videos_filename_location_summary">Beispiel: \'Stadt-ein_ort.mp4\' wird als \'Stadt - Ein Ort\' angezeigt</string>
 
-    <string name="interface_alt_text_position_title">Alternative Textposition</string>
-    <string name="interface_alt_text_position_summary">Position von Uhr &amp; Standort nach jedem Video ändern um Einbrennen zu verhindern (OLED)</string>
+    <string name="refresh_rate_switching_title">Auto refresh rate switching</string>
+    <string name="refresh_rate_switching_summary">Change the refresh rate of the display to match the video frame rate</string>
+
+    <!-- Main / Settings / Playlist -->
+    <string name="category_playlist">Wiedergabeliste</string>
 
     <string name="interface_mute_videos_title">Stummschaltung der Videos</string>
     <string name="interface_mute_videos_summary">Videos ohne Ton wiedergegeben</string>
 
-    <string name="interface_enable_skip_videos_title">Nächstes / Vorheriges Video</string>
-    <string name="interface_enable_skip_videos_summary">Überspringe ein Video mit der Fernbedienung (rechts / links auf D-Pad)</string>
-
     <string name="interface_shuffle_videos_title">Reihenfolge der Videos mischen</string>
     <string name="interface_shuffle_videos_summary">Videos in zufälliger Reihenfolge wiedergeben</string>
+
+    <string name="playback_speed_title">Wiedergabegeschwindigkeit</string>
+    <string name="playback_speed_summary">Wähle eine Wiedergabegeschwindigkeit</string>
 
     <string name="interface_remove_duplicates_title">Entferne duplizierte Videos</string>
     <string name="interface_remove_duplicates_summary">Entferne Videos mit gleichem Dateinamen aus der Wiedergabeliste</string>
 
-    <string name="performance_title">Performance &amp; Debugging</string>
-    <string name="performance_summary">Zum Beheben von Problemen</string>
+    <string name="any_videos_ignore_non_manifest_videos_title">Ignoriere unbekannte / nicht von Apple stammende Videos</string>
+    <string name="any_videos_ignore_non_manifest_videos_summary">Überspringe Videos die nicht in Video-Manifesten von Apple vorkommen</string>
+
+<!--    <string name="any_videos_use_apple_manifests_title">Orte / Sehenswürdigkeiten für passende Apple Videos anzeigen</string>-->
+<!--    <string name="any_videos_use_apple_manifests_summary">Nutzt die Video-Manifeste verschiedener Versionen von tvOS</string>-->
+
+    <!-- Main / Settings / D-Pad/Remote -->
+    <string name="category_dpad">D-Pad / Fernbedienung</string>
+
+    <string name="interface_enable_skip_videos_title">Nächstes / Vorheriges Video</string>
+    <string name="interface_enable_skip_videos_summary">Überspringe ein Video mit der Fernbedienung (Rechts / Links auf dem D-Pad der Fernbedienung)</string>
+
+    <string name="interface_enable_playback_speed_change_title">Geschwindigkeitsänderung während der Wiedergabe</string>
+    <string name="interface_enable_playback_speed_change_summary">Ändere die Wiedergabegeschwindigkeit (Hoch / Runter auf dem D-Pad der Fernbedienung)</string>
+
+    <!-- Main / Settings / Device capabilities -->
+    <string name="category_capabilities">TV-Funktionen</string>
+
+    <string name="capabilities_device_title">Gerät</string>
+    <string name="capabilities_display_title">TV / Display</string>
+    <string name="capabilities_codecs_title">Video-Codecs</string>
+    <string name="capabilities_decoders_title">Video-Decoder</string>
+    <string name="capabilities_resolution_title">Bildschirmauflösung</string>
+
+    <!-- Main / Settings / Troubleshooting -->
+    <string name="category_video_render_options">Video- &amp; renderoptionen</string>
+    <string name="category_samba_options">Optionen für Samba / SMB</string>
+
+    <string name="playback_max_video_length_title">Limit video length</string>
+    <string name="playback_max_video_length_summary">Skip to the next video after a specified number of seconds</string>
 
     <string name="performance_enable_tunneling_title">Aktiviere Tunneling</string>
     <string name="performance_enable_tunneling_summary">Verwende Hardwarebeschleunigung (für flüssiges 4K / HD wichtig)</string>
@@ -129,24 +195,21 @@
     <string name="performance_buffering_strategy_title">Pufferstrategie</string>
     <string name="performance_buffering_strategy_summary">Ändern der Prioritäten beim Zwischenspeichern kann bei instabilen Verbindungen helfen</string>
 
+    <string name="philips_dolby_vision_fix_title">Use alternate MediaCodec parsing</string>
+    <string name="philips_dolby_vision_fix_summary">Fixes Dolby Vision playback on some older Philips TVs</string>
+
     <string name="performance_exceed_renderer_title">Maximale Auflösung des TVs überschreiten</string>
     <string name="performance_exceed_renderer_summary">Eine höhere Auflösung ist auf den meisten Geräten nicht ratsam!</string>
 
-    <string name="performance_capabilities_title">TV-Funktionen</string>
-    <string name="performance_capabilities_summary">Erkannte Funktionen und Codecs ansehen</string>
+    <string name="samba_videos_enable_encryption_title">Verschlüsselung aktivieren</string>
+    <string name="samba_videos_enable_encryption_summary">Verschlüsselte SMB-Verbindung aktivieren (reduziert evtl. Netzwerkgeschwindigkeit)</string>
 
-    <string name="capabilities_device_title">Gerät</string>
-    <string name="capabilities_display_title">TV / Display</string>
-    <string name="capabilities_codecs_title">Unterstütze Codecs</string>
-    <string name="capabilities_decoders_title">Verfügbare Decoder</string>
-    <string name="capabilities_resolution_title">Bildschirmauflösung</string>
+    <string name="samba_videos_smb_dialects_title">SMB-Protokolldialekte wählen</string>
+    <string name="samba_videos_smb_dialects_summary">Verwendete Version des SMB-Protokolls auswählen</string>
 
-    <string name="playback_speed_title">Wiedergabegeschwindigkeit</string>
-    <string name="playback_speed_summary">Wähle eine Wiedergabegeschwindigkeit</string>
+    <!-- Main / Settings / About -->
+    <string name="category_about">Über</string>
 
-    <!-- Actions -->
-    <string name="test_screensaver_settings">Teste Einstellungen des Bildschirmschoners</string>
-    <string name="open_system_screensaver_options">Öffne die Systemeinstellungen des Bildschirmschoners</string>
-    <string name="interface_enable_playback_speed_change_title">Allow speed change during playback</string>
-    <string name="interface_enable_playback_speed_change_summary">Change the speed of the video by pressing up or down on the d-pad of your remote</string>
+    <string name="about_version_title">Version</string>
+    <string name="about_date_title">Build Date</string>
 </resources>

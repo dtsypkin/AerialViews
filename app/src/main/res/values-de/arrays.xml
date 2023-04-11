@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Apple Video Options -->
-
-    <string-array name="interface_show_location_style_entries">
-        <item>Kurze Titel</item>
-        <item>Sehenswürdigkeiten (Lokalisiert)</item>
+    <!-- Location style -->
+    <string-array name="interface_show_location_entries">
+        <item>Off</item>
+        <item>Location or title</item>
+        <item>Points of interest (available in many languages)</item>
     </string-array>
 
-    <!-- Performance & Debug Options -->
+    <!-- Troubleshooting options -->
     <string-array name="performance_buffering_strategy_entries">
         <item>Standard</item>
         <item>Größerer Puffer</item>

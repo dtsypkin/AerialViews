@@ -1,10 +1,11 @@
 @file:Suppress("unused")
 
-package com.neilturner.aerialviews.ui.settings
+package com.neilturner.aerialviews.ui.sources
 
 import android.Manifest
 import android.content.SharedPreferences
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,7 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class AnyVideosFragment :
+class LocalVideosFragment :
     PreferenceFragmentCompat(),
     PreferenceManager.OnPreferenceTreeClickListener,
     SharedPreferences.OnSharedPreferenceChangeListener {
@@ -36,7 +37,7 @@ class AnyVideosFragment :
     private lateinit var requestPermission: ActivityResultLauncher<String>
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.settings_any_videos, rootKey)
+        setPreferencesFromResource(R.xml.sources_local_videos, rootKey)
         preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
 
         storagePermissions = StoragePermissions(requireContext())
@@ -55,21 +56,6 @@ class AnyVideosFragment :
     override fun onDestroy() {
         preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
         super.onDestroy()
-    }
-
-    override fun onResume() {
-        val canReadVideos = storagePermissions.hasAccess(
-            action = Action.READ,
-            types = listOf(FileType.Video),
-            createdBy = StoragePermissions.CreatedBy.AllApps
-        )
-
-        if (!canReadVideos &&
-            requiresPermission()
-        ) {
-            resetPreference()
-        }
-        super.onResume()
     }
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
@@ -98,7 +84,11 @@ class AnyVideosFragment :
             )
 
             if (!canReadVideos) {
-                requestPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    requestPermission.launch(Manifest.permission.READ_MEDIA_VIDEO)
+                } else {
+                    requestPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                }
             }
         }
     }
@@ -171,7 +161,7 @@ class AnyVideosFragment :
     }
 
     private fun showNoticeIfNeeded() {
-        if (!DeviceHelper.isNvidaShield()) {
+        if (!DeviceHelper.isNvidiaShield()) {
             return
         }
         val notice = findPreference<Preference>("local_videos_notice")
@@ -179,6 +169,6 @@ class AnyVideosFragment :
     }
 
     companion object {
-        private const val TAG = "AnyVideosFragment"
+        private const val TAG = "LocalVideosFragment"
     }
 }

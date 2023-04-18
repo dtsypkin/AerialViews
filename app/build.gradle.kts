@@ -46,6 +46,7 @@ android {
             isDebuggable = true
             //isMinifyEnabled = true
             //proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            buildConfigField("String", "BUILD_TIME", "\"" + System.currentTimeMillis().toString() + "\"")
 
         }
         getByName("release") {
@@ -56,6 +57,7 @@ android {
             manifestPlaceholders["crashlyticsCollectionEnabled"] = true
             manifestPlaceholders["performanceCollectionEnabled"] = true
             //isDebuggable = true
+            buildConfigField("String", "BUILD_TIME", "\"" + System.currentTimeMillis().toString() + "\"")
         }
     }
 

@@ -1,11 +1,15 @@
 # Aerial Views
 
-[![API](https://img.shields.io/badge/API-22%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=22)
-[![License](https://img.shields.io/:license-gpl%20v3-brightgreen.svg?style=flat)](https://raw.githubusercontent.com/theothernt/AerialViews/master/LICENSE)
+[![Latest GitHub release](https://img.shields.io/github/v/release/theothernt/AerialViews.svg?logo=github&label=GitHub&cacheSeconds=3600)](https://github.com/theothernt/AerialViews/releases/latest)
+[![GitHub Downloads](https://img.shields.io/github/downloads/theothernt/AerialViews/total?color=blue&label=Downloads&logo=github)](https://github.com/theothernt/AerialViews/releases/latest)
+[![Latest Google Play version](https://img.shields.io/endpoint?color=brightgreen&logo=google-play&url=https%3A%2F%2Fplay.cuzi.workers.dev%2Fplay%3Fi%3Dcom.neilturner.aerialviews%26l%3DGoogle%2520Play%26m%3D%24version)](https://play.google.com/store/apps/details?id=com.neilturner.aerialviews)
+[![Google Play Downloads](https://img.shields.io/endpoint?color=brightgreen&logo=google-play&url=https%3A%2F%2Fplay.cuzi.workers.dev%2Fplay%3Fi%3Dcom.neilturner.aerialviews%26l%3DDownloads%26m%3D%24totalinstalls)](https://play.google.com/store/apps/details?id=com.neilturner.aerialviews)
+[![API](https://img.shields.io/badge/API-22%2B-lightgrey.svg?style=flat)](https://android-arsenal.com/api?level=22)
+[![License](https://img.shields.io/:license-gpl%20v3-lightgrey.svg?style=flat)](https://raw.githubusercontent.com/theothernt/AerialViews/master/LICENSE)
 
-### A screensaver for Android TV devices including Nvidia Shield, Fire TV, and Chromecast with Google TV. Inspired by Apple TV's video screensaver.
+A screensaver for Android TV devices including Nvidia Shield, Fire TV, and Chromecast with Google TV. Inspired by Apple TV's video screensaver.
 
-Please read if you have a [Nvidia Shield](#nvidia-shield-users), [Chromecast with Google TV](#chromecast-with-google-tv-users) or [Amazon Fire TV](#amazon-fire-tv-users)
+*Please read if you have a [Nvidia Shield](#nvidia-shield-users), [Chromecast with Google TV](#chromecast-with-google-tv-users) or [Amazon Fire TV](#amazon-fire-tv-users)*
 
 ## Features include...
 
@@ -45,7 +49,6 @@ If your device is running Android 11 (Shield Experience 9+) and you want to play
 `Settings > Device Preferences > Storage > Scan for
 media automatically`
 
-
 ## Chromecast with Google TV users
 
 Unfortunately, as of July 2022, an update to Google TV removed user-interface option to set Aerial Views (or any other 3rd party screensaver) as default, or change the screensaver timeout.
@@ -64,7 +67,6 @@ To restore the default Ambient screensaver, use the following ADB command...
 adb shell settings put secure screensaver_components com.google.android.apps.tv.dreamx/.service.Backdrop
 ```
 
-
 ## Amazon Fire TV users
 
 Install the app from either the Amazon Appstore or sideload the APK.
@@ -78,7 +80,6 @@ The only way to achieve this is...
   ```
   adb shell settings put secure screensaver_components com.neilturner.aerialviews/com.neilturner.aerialviews.ui.screensaver.DreamActivity
   ```
-
 
 ## How remote and local playback of Apple videos works
 

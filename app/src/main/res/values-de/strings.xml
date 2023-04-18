@@ -14,7 +14,7 @@
     <string name="category_video_source">Video-Quelle</string>
 
     <!-- Common Prefs/Options -->
-    <string name="videos_quality_title">Qualität</string>
+    <string name="videos_quality_title">Video quality</string>
     <string name="videos_quality_summary">Videoqualität auswählen</string>
 
     <!-- Main -->
@@ -121,7 +121,7 @@
     <string name="settings_troubleshooting_summary">Leistungs- &amp; Debug-Einstellungen zur Problembehebung</string>
 
     <string name="settings_about_title">Über</string>
-    <string name="settings_about_summary">Über die App, benutzte Komponenten, usw.</string>
+    <string name="settings_about_summary">Version, build info, etc</string>
 
     <string name="settings_import_export_settings_title">Einstellungen Sichern / Wiederherstellen</string>
     <string name="settings_import_export_settings_summary">Einstellungen im Downloadordner Sichern oder daraus Wiederherstellen</string>
@@ -135,14 +135,13 @@
     <string name="interface_show_clock_title">Zeige Uhr</string>
     <string name="interface_show_clock_summary">Zeigt die aktuelle Zeit</string>
 
-    <string name="interface_show_location_title">Zeige Videotitel</string>
-    <string name="interface_show_location_summary">Zeigt einen Titel oder Standort des laufenden Videos an</string>
-
-    <string name="interface_show_location_style_title">Apple Videos</string>
-    <string name="interface_show_location_style_summary">Wähle den Stil des Videotitels</string>
+    <string name="interface_show_location_title">Show video location, title or points of interest</string>
 
     <string name="any_videos_filename_location_title">Nutze Dateinamen als Ortsangabe</string>
     <string name="any_videos_filename_location_summary">Beispiel: \'Stadt-ein_ort.mp4\' wird als \'Stadt - Ein Ort\' angezeigt</string>
+
+    <string name="refresh_rate_switching_title">Auto refresh rate switching</string>
+    <string name="refresh_rate_switching_summary">Change the refresh rate of the display to match the video frame rate</string>
 
     <!-- Main / Settings / Playlist -->
     <string name="category_playlist">Wiedergabeliste</string>
@@ -187,11 +186,17 @@
     <string name="category_video_render_options">Video- &amp; renderoptionen</string>
     <string name="category_samba_options">Optionen für Samba / SMB</string>
 
+    <string name="playback_max_video_length_title">Limit video length</string>
+    <string name="playback_max_video_length_summary">Skip to the next video after a specified number of seconds</string>
+
     <string name="performance_enable_tunneling_title">Aktiviere Tunneling</string>
     <string name="performance_enable_tunneling_summary">Verwende Hardwarebeschleunigung (für flüssiges 4K / HD wichtig)</string>
 
     <string name="performance_buffering_strategy_title">Pufferstrategie</string>
     <string name="performance_buffering_strategy_summary">Ändern der Prioritäten beim Zwischenspeichern kann bei instabilen Verbindungen helfen</string>
+
+    <string name="philips_dolby_vision_fix_title">Use alternate MediaCodec parsing</string>
+    <string name="philips_dolby_vision_fix_summary">Fixes Dolby Vision playback on some older Philips TVs</string>
 
     <string name="performance_exceed_renderer_title">Maximale Auflösung des TVs überschreiten</string>
     <string name="performance_exceed_renderer_summary">Eine höhere Auflösung ist auf den meisten Geräten nicht ratsam!</string>
@@ -204,4 +209,7 @@
 
     <!-- Main / Settings / About -->
     <string name="category_about">Über</string>
+
+    <string name="about_version_title">Version</string>
+    <string name="about_date_title">Build Date</string>
 </resources>

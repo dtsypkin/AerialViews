@@ -3,6 +3,7 @@ package com.neilturner.aerialviews.services
 import android.content.Context
 import android.util.Log
 import com.neilturner.aerialviews.R
+import com.neilturner.aerialviews.models.LocationType
 import com.neilturner.aerialviews.models.VideoPlaylist
 import com.neilturner.aerialviews.models.VideoQuality
 import com.neilturner.aerialviews.models.prefs.AppleVideoPrefs
@@ -74,7 +75,7 @@ class VideoService(private val context: Context) {
         }
 
         // Try to add location/POIs to local and network videos
-        if (InterfacePrefs.showLocation) {
+        if (InterfacePrefs.showLocation != LocationType.OFF) {
             val matches = matchVideosWithManifestData(videos)
             videos = matches.first.toMutableList()
 
@@ -89,7 +90,7 @@ class VideoService(private val context: Context) {
 
         // If there are videos with no location yet, use filename as location
         if (!GeneralPrefs.ignoreNonManifestVideos &&
-            InterfacePrefs.showLocation &&
+            InterfacePrefs.showLocation != LocationType.OFF &&
             GeneralPrefs.filenameAsLocation
         ) {
             videos.forEach { video ->

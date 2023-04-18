@@ -1,5 +1,3 @@
-@file:Suppress("unused")
-
 package com.neilturner.aerialviews.ui.settings
 
 import android.Manifest
@@ -21,7 +19,7 @@ import com.google.modernstorage.permissions.StoragePermissions
 import com.google.modernstorage.storage.AndroidFileSystem
 import com.google.modernstorage.storage.toOkioPath
 import com.neilturner.aerialviews.R
-import com.neilturner.aerialviews.models.LocationStyle
+import com.neilturner.aerialviews.models.LocationType
 import com.neilturner.aerialviews.models.VideoQuality
 import com.neilturner.aerialviews.models.prefs.AppleVideoPrefs
 import com.neilturner.aerialviews.models.prefs.GeneralPrefs
@@ -126,7 +124,6 @@ class SettingsFragment :
         }
     }
 
-    @Suppress("BlockingMethodInNonBlockingContext") // code runs inside Dispatcher.IO
     private suspend fun importSettings() = withContext(Dispatchers.IO) {
         Log.i(TAG, "Importing settings from Downloads folder")
 
@@ -173,8 +170,7 @@ class SettingsFragment :
 
             // Interface prefs
             InterfacePrefs.showClock = properties["show_clock"].toString().toBoolean()
-            InterfacePrefs.showLocation = properties["show_location"].toString().toBoolean()
-            InterfacePrefs.showLocationStyle = LocationStyle.valueOf(properties["show_location_style"] as String)
+            InterfacePrefs.showLocation = LocationType.valueOf(properties["location_style"] as String)
             InterfacePrefs.alternateTextPosition = properties["alt_text_position"].toString().toBoolean()
 
             // General prefs
@@ -243,8 +239,7 @@ class SettingsFragment :
 
         // Interface prefs
         settings["show_clock"] = InterfacePrefs.showClock.toString()
-        settings["show_location"] = InterfacePrefs.showLocation.toString()
-        settings["show_location_style"] = InterfacePrefs.showLocationStyle.toString()
+        settings["location_style"] = InterfacePrefs.showLocation.toString()
         settings["alt_text_position"] = InterfacePrefs.alternateTextPosition.toString()
 
         // General prefs

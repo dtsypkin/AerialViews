@@ -5,6 +5,8 @@ import com.chibatching.kotpref.KotprefModel
 object GeneralPrefs : KotprefModel() {
     override val kotprefName = "${context.packageName}_preferences"
 
+    var checkForHevcSupport by booleanPref(false, "check_for_hevc_support")
+
     var muteVideos by booleanPref(true, "mute_videos")
     var shuffleVideos by booleanPref(true, "shuffle_videos")
     var removeDuplicates by booleanPref(true, "remove_duplicates")
@@ -16,6 +18,8 @@ object GeneralPrefs : KotprefModel() {
     var enableTunneling by booleanPref(true, "enable_tunneling")
     var exceedRenderer by booleanPref(false, "exceed_renderer")
     var bufferingStrategy by stringPref("DEFAULT", "performance_buffering_strategy")
+    var refreshRateSwitching by booleanPref(false, "refresh_rate_switching")
+    var philipsDolbyVisionFix by booleanPref(false, "philips_dolby_vision_fix")
 
     var filenameAsLocation by booleanPref(true, "any_videos_filename_location")
     var useAppleManifests by booleanPref(true, "any_videos_use_apple_manifests")

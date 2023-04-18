@@ -11,7 +11,6 @@ plugins {
     id("de.mannodermaus.android-junit5")
 }
 
-@Suppress("UnstableApiUsage")
 android {
     namespace = "com.neilturner.aerialviews"
     compileSdk = 33
@@ -29,12 +28,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     buildFeatures {
@@ -100,7 +99,7 @@ androidComponents {
 
 dependencies {
     // Kotlin
-    val kotlinVersion = "1.6.21"
+    val kotlinVersion = "1.8.20"
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
 
@@ -113,23 +112,23 @@ dependencies {
     implementation("com.google.modernstorage:modernstorage-storage:1.0.0-alpha06")
 
     // Android X
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.10.0")
     implementation("androidx.leanback:leanback:1.0.0")
     implementation("androidx.leanback:leanback-preference:1.0.0")
     implementation("androidx.preference:preference-ktx:1.2.0")
-    implementation("androidx.activity:activity-ktx:1.6.1")
+    implementation("androidx.activity:activity-ktx:1.7.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     // Firebase
-    implementation("com.google.firebase:firebase-analytics-ktx:21.2.0")
-    implementation("com.google.firebase:firebase-crashlytics-ktx:18.3.5")
+    implementation("com.google.firebase:firebase-analytics-ktx:21.2.2")
+    implementation("com.google.firebase:firebase-crashlytics-ktx:18.3.6")
     implementation("com.google.firebase:firebase-perf-ktx:20.3.1")
 
     // GSON
     implementation("com.google.code.gson:gson:2.10.1")
 
     // ExoPlayer
-    implementation("com.google.android.exoplayer:exoplayer-core:2.18.4")
+    implementation("com.google.android.exoplayer:exoplayer-core:2.18.5")
 
     // Kotpref
     implementation("com.chibatching.kotpref:kotpref:2.13.2")

@@ -1,7 +1,7 @@
 val kotlinVersion: String by project
 
 buildscript {
-    val kotlinVersion = "1.8.10"
+    val kotlinVersion = "1.8.20"
 
     repositories {
         mavenCentral()
@@ -10,10 +10,10 @@ buildscript {
     }
     
     dependencies {
-        classpath("com.android.tools.build:gradle:7.4.2")
+        classpath("com.android.tools.build:gradle:8.0.0")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
         classpath("com.google.gms:google-services:4.3.15")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.4")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.5")
         classpath("com.google.firebase:perf-plugin:1.4.2")
         classpath("org.jmailen.gradle:kotlinter-gradle:3.12.0")
         classpath("de.mannodermaus.gradle.plugins:android-junit5:1.8.2.0")

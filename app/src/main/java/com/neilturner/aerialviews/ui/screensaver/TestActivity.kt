@@ -58,6 +58,19 @@ class TestActivity : Activity() {
                 KeyEvent.KEYCODE_DPAD_UP_RIGHT -> return true
 
                 KeyEvent.KEYCODE_DPAD_CENTER -> {
+                    if (!videoController.isPlaying &&
+                            GeneralPrefs.enableBlankScreenToggle) {
+                        //videoController.stopPlayback()
+                        return true
+                    }
+
+                    if (GeneralPrefs.enableBlankScreenToggle &&
+                        event.action == KeyEvent.ACTION_DOWN &&
+                        event.isLongPress) {
+                        //videoController.restartPlayback()
+                        return true
+                    }
+
                     // Only disable OK button if left/right/up/down keys are in use
                     // to avoid accidental presses
                     if (GeneralPrefs.enablePlaybackSpeedChange ||
@@ -70,6 +83,10 @@ class TestActivity : Activity() {
                 }
 
                 KeyEvent.KEYCODE_DPAD_UP -> {
+                    if (!videoController.isPlaying) {
+                        return true
+                    }
+
                     if (!GeneralPrefs.enablePlaybackSpeedChange) {
                         finish()
                         return true
@@ -79,6 +96,10 @@ class TestActivity : Activity() {
                 }
 
                 KeyEvent.KEYCODE_DPAD_DOWN -> {
+                    if (!videoController.isPlaying) {
+                        return true
+                    }
+
                     if (!GeneralPrefs.enablePlaybackSpeedChange) {
                         finish()
                         return true
@@ -88,6 +109,10 @@ class TestActivity : Activity() {
                 }
 
                 KeyEvent.KEYCODE_DPAD_LEFT -> {
+                    if (!videoController.isPlaying) {
+                        return true
+                    }
+
                     if (!GeneralPrefs.enableSkipVideos) {
                         finish()
                         return true
@@ -97,6 +122,9 @@ class TestActivity : Activity() {
                 }
 
                 KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                    if (!videoController.isPlaying) {
+                        return true
+                    }
                     if (!GeneralPrefs.enableSkipVideos) {
                         finish()
                         return true

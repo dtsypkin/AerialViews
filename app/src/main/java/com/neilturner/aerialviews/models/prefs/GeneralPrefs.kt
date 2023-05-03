@@ -10,10 +10,12 @@ object GeneralPrefs : KotprefModel() {
     var muteVideos by booleanPref(true, "mute_videos")
     var shuffleVideos by booleanPref(true, "shuffle_videos")
     var removeDuplicates by booleanPref(true, "remove_duplicates")
-    var enableSkipVideos by booleanPref(true, "enable_skip_videos")
-    var enablePlaybackSpeedChange by booleanPref(false, "enable_playback_speed_change")
     var playbackSpeed by stringPref("1", "playback_speed")
     var maxVideoLength by stringPref("0", "playback_max_video_length")
+
+    var enableSkipVideos by booleanPref(true, "enable_skip_videos")
+    var enablePlaybackSpeedChange by booleanPref(false, "enable_playback_speed_change")
+    var enableBlankScreenToggle by booleanPref(false, "enable_blank_screen_toggle")
 
     var enableTunneling by booleanPref(true, "enable_tunneling")
     var exceedRenderer by booleanPref(false, "exceed_renderer")

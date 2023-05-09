@@ -17,6 +17,7 @@ import com.google.modernstorage.permissions.StoragePermissions
 import com.google.modernstorage.permissions.StoragePermissions.Action
 import com.google.modernstorage.permissions.StoragePermissions.FileType
 import com.neilturner.aerialviews.R
+import com.neilturner.aerialviews.models.prefs.GeneralPrefs
 import com.neilturner.aerialviews.models.prefs.InterfacePrefs
 import com.neilturner.aerialviews.models.prefs.LocalVideoPrefs
 import com.neilturner.aerialviews.utils.DeviceHelper
@@ -36,6 +37,10 @@ class MainFragment :
             LocaleListCompat.getEmptyLocaleList()
         }
         AppCompatDelegate.setApplicationLocales(appLocale)
+
+        if (GeneralPrefs.startScreensaverOnLaunch) {
+            testScreensaverSettings()
+        }
     }
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {

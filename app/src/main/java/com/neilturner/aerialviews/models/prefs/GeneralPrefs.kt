@@ -26,4 +26,6 @@ object GeneralPrefs : KotprefModel() {
     var useAppleManifests by booleanPref(true, "any_videos_use_apple_manifests")
     var useCustomManifests by booleanPref(true, "any_videos_use_custom_manifests")
     var ignoreNonManifestVideos by booleanPref(false, "any_videos_ignore_non_manifest_videos")
+
+    var startScreensaverOnLaunch by booleanPref(false, "start_screensaver_on_launch")
 }

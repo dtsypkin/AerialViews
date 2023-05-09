@@ -1,6 +1,5 @@
 package com.neilturner.aerialviews.ui
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
@@ -33,10 +32,8 @@ class MainActivity :
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
-    @SuppressLint("MissingSuperCall")
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        // Save current activity title so we can set it again after a configuration change
         outState.putCharSequence("TITLE_TAG", title)
     }
 
@@ -58,7 +55,6 @@ class MainActivity :
             pref.fragment.toString()
         ).apply {
             arguments = args
-            // setTargetFragment(caller, 0)
         }
         // Replace the existing Fragment with the new Fragment
         supportFragmentManager.beginTransaction()

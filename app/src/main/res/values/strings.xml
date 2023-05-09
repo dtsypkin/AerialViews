@@ -208,6 +208,9 @@
     <string name="samba_videos_smb_dialects_title">Select SMB dialects</string>
     <string name="samba_videos_smb_dialects_summary">Choose which versions of the SMB protocol to use</string>
 
+    <string name="start_screensaver_on_launch_title">Start screensaver on launch</string>
+    <string name="start_screensaver_on_launch_summary">Skips the menu and starts the screensaver immediately</string>
+
     <string name="locale_menu_title">Menu text locale</string>
     <string name="locale_screensaver_title">Screensaver text (clock, location) locale</string>
 

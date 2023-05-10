@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.preference.Preference
@@ -17,7 +18,6 @@ import com.google.modernstorage.permissions.StoragePermissions
 import com.google.modernstorage.permissions.StoragePermissions.Action
 import com.google.modernstorage.permissions.StoragePermissions.FileType
 import com.neilturner.aerialviews.R
-import com.neilturner.aerialviews.models.prefs.GeneralPrefs
 import com.neilturner.aerialviews.models.prefs.InterfacePrefs
 import com.neilturner.aerialviews.models.prefs.LocalVideoPrefs
 import com.neilturner.aerialviews.utils.DeviceHelper
@@ -26,6 +26,8 @@ import java.lang.Exception
 class MainFragment :
     PreferenceFragmentCompat(),
     PreferenceManager.OnPreferenceTreeClickListener {
+
+    private var usedBackButton = false
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.main, rootKey)
@@ -38,9 +40,41 @@ class MainFragment :
         }
         AppCompatDelegate.setApplicationLocales(appLocale)
 
-        if (GeneralPrefs.startScreensaverOnLaunch) {
-            testScreensaverSettings()
+        Log.i(TAG, "Fragment - onCreatePreferences")
+        val intent = requireActivity().intent
+
+        if (intent.action == Intent.ACTION_MAIN && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
+            && (intent.flags and Intent.FLAG_ACTIVITY_NEW_TASK != 0
+                    || intent.flags and Intent.FLAG_ACTIVITY_CLEAR_TASK != 0)) {
+            // App was resumed from the background
+            Log.i(TAG, "App resumed")
+        } else {
+            // App was launched or resumed from a different activity
+            Log.i(TAG, "Launched")
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.i(TAG, "onResume")
+
+        if (usedBackButton) {
+            usedBackButton = false
+            Log.i(TAG, "Launch after back button")
+        }
+
+        requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(this, object: OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    Log.i(TAG, "Back button pressed")
+                    usedBackButton = true
+                    if (isEnabled) {
+                        isEnabled = false
+                        requireActivity().onBackPressed()
+                    }
+                }
+            })
     }
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {

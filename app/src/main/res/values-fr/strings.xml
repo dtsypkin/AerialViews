@@ -63,20 +63,32 @@
     <string name="comm2_videos_enabled">Use community videos</string>
 
     <!-- Main / Video Sources / Local+USB videos -->
-    <string name="category_folder_filter">Définir les noms des répertoires</string>
+    <string name="category_media_scanner_options">Media scanner options</string>
+    <string name="category_folder_access_options">Folder access options</string>
 
     <string name="local_videos_enabled_title">Use Local or USB storage videos</string>
 
-    <string name="local_videos_notice_summary">Settings > Device Preferences > Storage > Scan for media automatically</string>
-    <string name="local_videos_notice_title">Nvidia Shield users, make sure the following option is enabled…</string>
+    <string name="local_videos_search_type_title">Choose how videos are found</string>
+    <string name="local_videos_search_test">Test local search settings</string>
 
-    <string name="local_videos_filter_enabled_title">Filtrer les dossiers</string>
-    <string name="local_videos_filter_enabled_summary">Jouer seulement les vidéos de certains dossiers (appareil / USB / réseau)</string>
+    <string name="local_videos_media_store_summary">Android scans all local storage, USB devices, etc for videos</string>
 
-    <string name="local_videos_filter_folder_title">Définir les noms des répertoires</string>
-    <string name="local_videos_filter_folder_summary">Exemple: «Aerial» ne joue que des vidéos du répertoire / téléchargements / Aerial / ab &amp; ignore d\'autres dossiers</string>
+    <string name="local_videos_shield_notice_title">Nvidia Shield users, make sure the following option is enabled…</string>
+    <string name="local_videos_shield_notice_summary">Settings > Device Preferences > Storage > Scan for media automatically</string>
 
-    <string name="local_videos_filter_test">Tester les paramètres du filtre</string>
+    <string name="local_videos_media_store_filter_enabled_title">Filtrer les dossiers</string>
+    <string name="local_videos_media_store_filter_enabled_summary">Jouer seulement les vidéos de certains dossiers (appareil / USB / réseau)</string>
+
+    <string name="local_videos_media_store_filter_folder_title">Définir les noms des répertoires</string>
+    <string name="local_videos_media_store_filter_folder_summary">Exemple: «Aerial» ne joue que des vidéos du répertoire / téléchargements / Aerial / ab &amp; ignore d\'autres dossiers</string>
+
+    <string name="local_videos_legacy_summary">Specify a single folder where videos are stored (Android 12 or less)</string>
+
+    <string name="local_videos_legacy_volume_title">Choose a volume</string>
+    <string name="local_videos_legacy_volume_summary">No volume chosen</string>
+
+    <string name="local_videos_legacy_folder_title">Specify a folder (eg. /videos)</string>
+    <string name="local_videos_legacy_folder_summary">No folder specified</string>
 
     <!-- Main / Video Sources / Samba videos -->
     <string name="category_server_details">Server details and credentials</string>
@@ -85,6 +97,9 @@
 
     <string name="samba_videos_hostname_title">Nom d\'hôte</string>
     <string name="samba_videos_hostname_summary">Adresse IP du serveur</string>
+
+    <string name="samba_videos_domainname_title">Domain name (Optional)</string>
+    <string name="samba_videos_domainname_summary">The domain name or workgroup of the server</string>
 
     <string name="samba_videos_sharename_title">Nom du partage réseau</string>
     <string name="samba_videos_sharename_summary">Exemple: /video/aérien/</string>
@@ -117,8 +132,8 @@
     <string name="settings_capabilities_title">Device capabilities</string>
     <string name="settings_capabilities_summary">View video codecs, resolution support, and other capabilities</string>
 
-    <string name="settings_troubleshooting_title">Troubleshooting</string>
-    <string name="settings_troubleshooting_summary">Performance &amp; debug options for troubleshooting</string>
+    <string name="settings_advanced_title">Advanced</string>
+    <string name="settings_advanced_summary">Performance &amp; debug options for troubleshooting</string>
 
     <string name="settings_about_title">About</string>
     <string name="settings_about_summary">Version, build info, etc</string>
@@ -161,9 +176,6 @@
     <string name="any_videos_ignore_non_manifest_videos_title">Ignorer les vidéos non Apple sur le stockage local et le réseau</string>
     <string name="any_videos_ignore_non_manifest_videos_summary">Ignorer les vidéos qui ne sont pas listées dans les manifestes vidéo Apple</string>
 
-<!--    <string name="any_videos_use_apple_manifests_title">Voir les lieux / points d\'intérêt pour les vidéos Apple correspondantes</string>-->
-<!--    <string name="any_videos_use_apple_manifests_summary">Utilisez le manifeste vidéo de différentes versions de TVOS</string>-->
-
     <!-- Main / Settings / D-Pad/Remote -->
     <string name="category_dpad">D-Pad/Remote</string>
 
@@ -182,12 +194,11 @@
     <string name="capabilities_decoders_title">Décodeurs disponibles</string>
     <string name="capabilities_resolution_title">"Résolution d'écran"</string>
 
-    <!-- Main / Settings / Troubleshooting -->
+    <!-- Main / Settings / Advanced -->
     <string name="category_video_render_options">Video &amp; render options</string>
     <string name="category_samba_options">Samba/SMB options</string>
 
     <string name="playback_max_video_length_title">Limit video length</string>
-    <string name="playback_max_video_length_summary">Skip to the next video after a specified number of seconds</string>
 
     <string name="performance_enable_tunneling_title">Activer le tunneling</string>
     <string name="performance_enable_tunneling_summary">Utilisez une accélération matérielle (important pour le streaming 4K / HD)</string>
@@ -206,6 +217,12 @@
 
     <string name="samba_videos_smb_dialects_title">Sélectionnez le dialecte du protocole SMB</string>
     <string name="samba_videos_smb_dialects_summary">Sélectionnez la version du protocole SMB</string>
+
+    <string name="locale_menu_title">Menu text locale</string>
+    <string name="locale_screensaver_title">Screensaver text (clock, location) locale</string>
+
+    <string name="locale_restart_app_title">Restart App</string>
+    <string name="locale_restart_app_summary">The app must be restarted to change the menu locale</string>
 
     <!-- Main / Settings / About -->
     <string name="category_about">About</string>

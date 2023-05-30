@@ -14,8 +14,8 @@ android {
         applicationId "com.neilturner.aerialviews"
         minSdkVersion 22 // to support Fire OS 5, Android v5.1, Lvl 22
         targetSdkVersion 33
-        versionCode 11
-        versionName "1.4.1"
+        versionCode 14
+        versionName "1.4.4"
 
         manifestPlaceholders.analyticsCollectionEnabled = false
         manifestPlaceholders.crashlyticsCollectionEnabled = false
@@ -23,16 +23,24 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11
+        jvmTarget = JavaVersion.VERSION_17
     }
 
     buildFeatures {
         dataBinding true
+    }
+
+    kotlin {
+        sourceSets.all {
+            languageSettings {
+                languageVersion = "2.0"
+            }
+        }
     }
 
     buildTypes {
@@ -44,8 +52,10 @@ android {
             minifyEnabled false
             pseudoLocalesEnabled true
 
-            //minifyEnabled true
-            //proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro
+//            minifyEnabled true
+//            proguardFiles getDefaultProguardFile(
+//                    'proguard-android-optimize.txt'),
+//                    'proguard-rules.pro'
         }
         release {
             buildConfigField("String", "BUILD_TIME", "\"" + System.currentTimeMillis().toString() + "\"")
@@ -91,7 +101,7 @@ android {
         }
         create("beta") {
             dimension = "version"
-            versionNameSuffix = "-beta3"
+            versionNameSuffix = "-beta1"
         }
         create("googleplay") {
             dimension = "version"
@@ -104,7 +114,7 @@ android {
 
 dependencies {
     // Kotlin
-    def coroutines_version = '1.6.4'
+    def coroutines_version = '1.7.1'
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
@@ -114,23 +124,24 @@ dependencies {
     implementation('com.google.modernstorage:modernstorage-storage:1.0.0-alpha06')
 
     // Android X
-    implementation('androidx.core:core-ktx:1.10.0')
+    implementation('androidx.core:core-ktx:1.10.1')
     implementation("androidx.leanback:leanback:1.0.0")
     implementation("androidx.leanback:leanback-preference:1.0.0")
     implementation("androidx.preference:preference-ktx:1.2.0")
-    implementation('androidx.activity:activity-ktx:1.7.0')
+    implementation('androidx.activity:activity-ktx:1.7.2')
     implementation('androidx.constraintlayout:constraintlayout:2.1.4')
+    implementation('androidx.appcompat:appcompat:1.6.1')
 
     // Firebase
-    implementation('com.google.firebase:firebase-analytics-ktx:21.2.1')
-    implementation('com.google.firebase:firebase-crashlytics-ktx:18.3.6')
-    implementation('com.google.firebase:firebase-perf-ktx:20.3.1')
+    implementation('com.google.firebase:firebase-analytics-ktx:21.3.0')
+    implementation('com.google.firebase:firebase-crashlytics-ktx:18.3.7')
+    implementation('com.google.firebase:firebase-perf-ktx:20.3.2')
 
     // GSON
     implementation('com.google.code.gson:gson:2.10.1')
 
     // ExoPlayer
-    implementation('com.google.android.exoplayer:exoplayer-core:2.18.5')
+    implementation('androidx.media3:media3-exoplayer:1.0.2')
 
     // Kotpref
     implementation("com.chibatching.kotpref:kotpref:2.13.2")
@@ -141,11 +152,11 @@ dependencies {
     implementation("com.hierynomus:smbj:0.11.5")
 
     // Memory leaks
-    debugImplementation('com.squareup.leakcanary:leakcanary-android:2.10')
+    debugImplementation('com.squareup.leakcanary:leakcanary-android:2.11')
 
     // Unit testing
-    testImplementation('org.junit.jupiter:junit-jupiter-api:5.9.2')
-    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.9.2')
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.9.3')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.9.3')
 }
 
 tasks.withType(Test) {

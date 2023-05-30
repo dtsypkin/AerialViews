@@ -51,7 +51,7 @@
     <string name="interface_show_location_default" translatable="false">POI</string>
 
     <!-- Playback speed -->
-    <string-array name="playback_speed_entries" translatable="false">
+    <string-array name="playback_speed_entries">
         <item>0.25x</item>
         <item>0.5x</item>
         <item>0.75x</item>
@@ -113,21 +113,21 @@
         <item>28</item>
     </string-array>
     <!-- Max. video length -->
-    <string-array name="playback_max_video_length_entries" translatable="false">
+    <string-array name="playback_max_video_length_entries">
         <item>No limit (default)</item>
-        <item>10 sec</item>
-        <item>20 sec</item>
-        <item>30 sec</item>
-        <item>1 min</item>
-        <item>2 min</item>
-        <item>3 min</item>
-        <item>4 min</item>
-        <item>5 min</item>
-        <item>6 min</item>
-        <item>7 min</item>
-        <item>8 min</item>
-        <item>9 min</item>
-        <item>10 min</item>
+        <item>10 seconds</item>
+        <item>20 seconds</item>
+        <item>30 seconds</item>
+        <item>1 minute</item>
+        <item>2 minutes</item>
+        <item>3 minutes</item>
+        <item>4 minutes</item>
+        <item>5 minutes</item>
+        <item>6 minutes</item>
+        <item>7 minutes</item>
+        <item>8 minutes</item>
+        <item>9 minutes</item>
+        <item>10 minutes</item>
     </string-array>
     <string-array name="playback_max_video_length_values" translatable="false">
         <item>0</item>
@@ -147,22 +147,33 @@
     </string-array>
     <string name="playback_max_video_length_default" translatable="false">0</string>
 
-    <!-- Network Video Options -->
-    <string-array name="network_videos_smb_dialects_entries" translatable="false">
+    <!-- Local Video Options -->
+    <string-array name="local_videos_search_type_entries">
+        <item>Media scanner</item>
+        <item>Folder access (legacy)</item>
+    </string-array>
+    <string-array name="local_videos_search_type_values" translatable="false">
+        <item>MEDIA_STORE</item>
+        <item>FOLDER_ACCESS</item>
+    </string-array>
+    <string name="local_videos_search_type_default" translatable="false">MEDIA_STORE</string>
+
+    <!-- Samba Video Options -->
+    <string-array name="samba_videos_smb_dialects_entries" translatable="false">
         <item>v3.1.1</item>
         <item>v3.0.2</item>
         <item>v3.0</item>
         <item>v2.1</item>
         <item>v2.0.2</item>
     </string-array>
-    <string-array name="network_videos_smb_dialects_values" translatable="false">
+    <string-array name="samba_videos_smb_dialects_values" translatable="false">
         <item>SMB_3_1_1</item>
         <item>SMB_3_0_2</item>
         <item>SMB_3_0</item>
         <item>SMB_2_1</item>
         <item>SMB_2_0_2</item>
     </string-array>
-    <string-array name="network_videos_smb_dialects_default" translatable="false">
+    <string-array name="samba_videos_smb_dialects_default" translatable="false">
         <item>SMB_3_1_1</item>
         <item>SMB_3_0_2</item>
         <item>SMB_3_0</item>
@@ -170,18 +181,38 @@
         <item>SMB_2_0_2</item>
     </string-array>
 
-    <!-- Troubleshooting options -->
-    <string-array name="performance_buffering_strategy_entries">
-        <item>Default</item>
-        <item>Larger buffer</item>
-        <item>Smaller buffer</item>
-        <item>Faster start on higher latency connection</item>
+    <!-- Locale options -->
+    <string-array name="locale_menu_entries" translatable="false">
+        <item>System locale (default)</item>
+        <item>English</item>
+        <item>German</item>
+        <item>French</item>
+        <item>Russian</item>
     </string-array>
-    <string-array name="performance_buffering_strategy_values" translatable="false">
-        <item>DEFAULT</item>
-        <item>LARGER</item>
-        <item>SMALLER</item>
-        <item>FAST_START</item>
+    <string-array name="locale_menu_values" translatable="false">
+        <item>default</item>
+        <item>en-IE</item>
+        <item>de-DE</item>
+        <item>fr-FR</item>
+        <item>ru-RU</item>
     </string-array>
-    <string name="performance_buffering_strategy_default" translatable="false">DEFAULT</string>
+    <string name="locale_menu_default" translatable="false">default</string>
+
+    <string-array name="locale_screensaver_entries" translatable="false">
+        <item>System locale (default)</item>
+        <item>English</item>
+        <item>German</item>
+        <item>Arabic</item>
+        <item>Japanese</item>
+        <item>Russian</item>
+    </string-array>
+    <string-array name="locale_screensaver_values" translatable="false">
+        <item>default</item>
+        <item>en-IE</item>
+        <item>de-DE</item>
+        <item>ar</item>
+        <item>ja-JP</item>
+        <item>ru-RU</item>
+    </string-array>
+    <string name="locale_screensaver_default" translatable="false">default</string>
 </resources>

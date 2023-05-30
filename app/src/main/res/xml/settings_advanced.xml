@@ -38,6 +38,12 @@
 
         <PreferenceCategory app:title="@string/category_video_render_options">
                 <CheckBoxPreference
+                    app:defaultValue="false"
+                    app:key="refresh_rate_switching"
+                    app:summary="@string/refresh_rate_switching_summary"
+                    app:title="@string/refresh_rate_switching_title" />
+
+                <CheckBoxPreference
                     app:defaultValue="true"
                     app:key="enable_tunneling"
                     app:summary="@string/performance_enable_tunneling_summary"
@@ -65,6 +71,24 @@
                     app:title="@string/philips_dolby_vision_fix_title" />
         </PreferenceCategory>
 
+        <PreferenceCategory app:title="@string/category_appearance">
+                <ListPreference
+                    app:key="locale_menu"
+                    app:defaultValue="@string/locale_menu_default"
+                    app:entries="@array/locale_menu_entries"
+                    app:entryValues="@array/locale_menu_values"
+                    app:title="@string/locale_menu_title"
+                    app:useSimpleSummaryProvider="true" />
+
+                <ListPreference
+                    app:key="locale_screensaver"
+                    app:defaultValue="@string/locale_screensaver_default"
+                    app:entries="@array/locale_screensaver_entries"
+                    app:entryValues="@array/locale_screensaver_values"
+                    app:title="@string/locale_screensaver_title"
+                    app:useSimpleSummaryProvider="true" />
+        </PreferenceCategory>
+
         <PreferenceCategory app:title="@string/category_samba_options">
                 <MultiSelectListPreference
                     app:key="samba_videos_smb_dialects"
@@ -81,5 +105,4 @@
                     app:summary="@string/samba_videos_enable_encryption_summary"
                     app:title="@string/samba_videos_enable_encryption_title" />
         </PreferenceCategory>
-
 </PreferenceScreen>

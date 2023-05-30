@@ -9,18 +9,18 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.SurfaceView
 import android.widget.MediaController.MediaPlayerControl
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.DefaultRenderersFactory
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackException
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.video.VideoSize
+import androidx.media3.common.C
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
+import androidx.media3.common.VideoSize
+import androidx.media3.exoplayer.DefaultRenderersFactory
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import com.neilturner.aerialviews.R
 import com.neilturner.aerialviews.models.prefs.GeneralPrefs
-import com.neilturner.aerialviews.services.SmbDataSourceFactory
+import com.neilturner.aerialviews.services.SambaDataSourceFactory
 import com.neilturner.aerialviews.utils.CustomRendererFactory
 import com.neilturner.aerialviews.utils.FileHelper
 import com.neilturner.aerialviews.utils.PhilipsMediaCodecAdapterFactory
@@ -84,7 +84,7 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
             PhilipsMediaCodecAdapterFactory.mediaUrl = uri.toString()
         }
         if (FileHelper.isSambaVideo(uri)) {
-            val mediaSource = ProgressiveMediaSource.Factory(SmbDataSourceFactory())
+            val mediaSource = ProgressiveMediaSource.Factory(SambaDataSourceFactory())
                 .createMediaSource(mediaItem)
             player.setMediaSource(mediaSource)
         } else {
@@ -189,11 +189,7 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
         }
 
         Log.i(TAG, "${frameRate}fps video, setting refresh rate if needed...")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            Log.i(TAG, "Android 12")
-            WindowHelper.setRefreshRate(context, surface, display, frameRate)
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Log.i(TAG, "Not Android 12")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             WindowHelper.setLegacyRefreshRate(context, frameRate)
         }
     }

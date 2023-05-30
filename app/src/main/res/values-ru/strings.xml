@@ -55,7 +55,7 @@
     <string name="apple_videos_enabled">Использовать видео Apple</string>
 
     <string name="apple_videos_data_usage_title">Использование данных</string>
-    <string name="apple_videos_data_estimate_summary">Прибл. %1$s в час</string>
+    <string name="apple_videos_data_estimate_summary">Приблизительно %1$s в час</string>
 
     <!-- Main / Video Sources / Comm1 videos -->
     <string name="comm1_videos_enabled">Использовать видео сообщества</string>
@@ -64,20 +64,32 @@
     <string name="comm2_videos_enabled">Использовать видео сообщества</string>
 
     <!-- Main / Video Sources / Local+USB videos -->
-    <string name="category_folder_filter">Фильтр папок</string>
+    <string name="category_media_scanner_options">Опции сканера мультимедиа</string>
+    <string name="category_folder_access_options">Параметры доступа к папкам</string>
 
     <string name="local_videos_enabled_title">Использовать видео с локального или USB-накопителя</string>
 
-    <string name="local_videos_notice_title">Пользователи Nvidia Shield, убедитесь, что включена следующая опция…</string>
-    <string name="local_videos_notice_summary">Настройки > Настройки устройства > Хранилище > Автоматическое сканирование медиафайлов</string>
+    <string name="local_videos_search_type_title">Выберите способ поиска видео</string>
+    <string name="local_videos_search_test">Протестируйте настройки локального поиска</string>
 
-    <string name="local_videos_filter_enabled_title">Фильтр папок</string>
-    <string name="local_videos_filter_enabled_summary">Воспроизведение видео только из определенной папки или папок на устройстве, USB и т. д.</string>
+    <string name="local_videos_media_store_summary">Android сканирует все локальные хранилища, USB-устройства и т.д. на наличие видео</string>
 
-    <string name="local_videos_filter_folder_title">Укажите название папки</string>
-    <string name="local_videos_filter_folder_summary">"Если вы храните видео, например, в /Videos/Aerial/, использование 'Aerial' будет отфильтровывать видео из других папок"</string>
+    <string name="local_videos_shield_notice_title">Пользователи Nvidia Shield, убедитесь, что включена следующая опция…</string>
+    <string name="local_videos_shield_notice_summary">Настройки > Настройки устройства > Хранилище > Автоматическое сканирование медиафайлов</string>
 
-    <string name="local_videos_filter_test">Протестировать настройки фильтра</string>
+    <string name="local_videos_media_store_filter_enabled_title">Фильтр папок</string>
+    <string name="local_videos_media_store_filter_enabled_summary">Воспроизведение видео только из определенной папки или папок на устройстве, USB и т. д.</string>
+
+    <string name="local_videos_media_store_filter_folder_title">Укажите название папки</string>
+    <string name="local_videos_media_store_filter_folder_summary">"Если вы храните видео, например, в /Videos/Aerial/, использование 'Aerial' будет отфильтровывать видео из других папок"</string>
+
+    <string name="local_videos_legacy_summary">Укажите одну папку, в которой хранятся видео (Android 12 или ниже)</string>
+
+    <string name="local_videos_legacy_volume_title">Выберите объем</string>
+    <string name="local_videos_legacy_volume_summary">Том не выбран</string>
+
+    <string name="local_videos_legacy_folder_title">Укажите папку (например, videos)</string>
+    <string name="local_videos_legacy_folder_summary">Папка не указана</string>
 
     <!-- Main / Video Sources / Samba videos -->
     <string name="category_server_details">Сведения о сервере и учетные данные</string>
@@ -87,8 +99,11 @@
     <string name="samba_videos_hostname_title">Имя хоста</string>
     <string name="samba_videos_hostname_summary">IP-адрес сервера</string>
 
+    <string name="samba_videos_domainname_title">Доменное имя (необязательно)</string>
+    <string name="samba_videos_domainname_summary">Доменное имя или рабочая группа сервера</string>
+
     <string name="samba_videos_sharename_title">Имя общего доступа</string>
-    <string name="samba_videos_sharename_summary">напр. /video/aerial</string>
+    <string name="samba_videos_sharename_summary">например /video/aerial</string>
 
     <string name="samba_videos_username_title">Имя пользователя</string>
     <string name="samba_videos_username_summary">Необязательно</string>
@@ -118,11 +133,11 @@
     <string name="settings_capabilities_title">Возможности устройства</string>
     <string name="settings_capabilities_summary">Просмотр видеокодеков, поддержки разрешений и другие возможности</string>
 
-    <string name="settings_advanced_title">Advanced</string>
+    <string name="settings_advanced_title">Дополнительно</string>
     <string name="settings_advanced_summary">Параметры производительности и отладки для устранения неполадок</string>
 
     <string name="settings_about_title">О приложении</string>
-    <string name="settings_about_summary">Version, build info, etc</string>
+    <string name="settings_about_summary">Версия, информация о сборке и т.д.</string>
 
     <string name="settings_import_export_settings_title">Импорт/экспорт настроек</string>
     <string name="settings_import_export_settings_summary">Импортирует или экспортирует настройки в папку Загрузки</string>
@@ -141,8 +156,8 @@
     <string name="any_videos_filename_location_title">Имя файла в качестве местоположения</string>
     <string name="any_videos_filename_location_summary">"напр. 'country-a_place.mp4' станет 'Country - A Place'"</string>
 
-    <string name="refresh_rate_switching_title">Auto refresh rate switching</string>
-    <string name="refresh_rate_switching_summary">Change the refresh rate of the display to match the video frame rate</string>
+    <string name="refresh_rate_switching_title">Автоматическое переключение частоты обновления</string>
+    <string name="refresh_rate_switching_summary">Измените частоту обновления дисплея в соответствии с частотой кадров видео</string>
 
     <!-- Main / Settings / Playlist -->
     <string name="category_playlist">Плейлист</string>
@@ -161,9 +176,6 @@
 
     <string name="any_videos_ignore_non_manifest_videos_title">Игнорировать видео не Apple в локальном хранилище или в локальной сети</string>
     <string name="any_videos_ignore_non_manifest_videos_summary">Пропускать видео, не указанные ни в одном видеоманифесте Apple</string>
-
-<!--    <string name="any_videos_use_apple_manifests_title">Показать Местоположения или POI для соответствующих видео Apple</string> -->
-<!--    <string name="any_videos_use_apple_manifests_summary">Использует видеоманифесты из разных версий tvOS</string> -->
 
     <!-- Main / Settings / D-Pad/Remote -->
     <string name="category_dpad">Крестовине пульта управления</string>
@@ -188,7 +200,6 @@
     <string name="category_samba_options">Samba/SMB настройки</string>
 
     <string name="playback_max_video_length_title">Ограничить длину видео</string>
-    <string name="playback_max_video_length_summary">Перейти к следующему видео через указанное количество секунд</string>
 
     <string name="performance_enable_tunneling_title">Включить туннелирование</string>
     <string name="performance_enable_tunneling_summary">Используйте аппаратное ускорение, более важно для 4K/HDR</string>
@@ -208,11 +219,11 @@
     <string name="samba_videos_smb_dialects_title">Выберите диалекты SMB</string>
     <string name="samba_videos_smb_dialects_summary">Выберите, какую версию SMB протокола использовать</string>
 
-    <string name="locale_menu_title">Menu text locale</string>
-    <string name="locale_screensaver_title">Screensaver text (clock, location) locale</string>
+    <string name="locale_menu_title">Язык текста меню</string>
+    <string name="locale_screensaver_title">Язык текста заставки (часы, местоположение)</string>
 
-    <string name="locale_restart_app_title">Restart App</string>
-    <string name="locale_restart_app_summary">The app must be restarted to change the menu locale</string>
+    <string name="locale_restart_app_title">Перезапустить приложение</string>
+    <string name="locale_restart_app_summary">Для изменения языка, приложение необходимо перезапустить</string>
 
     <!-- Main / Settings / About -->
     <string name="category_about">О приложении</string>

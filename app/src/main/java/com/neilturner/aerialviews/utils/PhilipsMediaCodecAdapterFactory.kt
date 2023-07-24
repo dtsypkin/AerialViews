@@ -21,6 +21,7 @@ class PhilipsMediaCodecAdapterFactory : MediaCodecAdapter.Factory {
         try {
             val extractor = MediaExtractor()
             extractor.setDataSource(mediaUrl!!)
+            //extractor.setDataSource(SambaMediaDataSource())
             mediaUrl = null
             val trackFormat = extractor.getTrackFormat(0)
             val codecData = trackFormat.getByteBuffer("csd-0")

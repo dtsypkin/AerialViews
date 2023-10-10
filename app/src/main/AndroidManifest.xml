@@ -52,6 +52,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
                 <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="aerialviews"/>
             </intent-filter>
         </activity>
 

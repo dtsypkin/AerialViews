@@ -19,10 +19,10 @@ import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import com.neilturner.aerialviews.R
 import com.neilturner.aerialviews.models.prefs.GeneralPrefs
+import com.neilturner.aerialviews.services.CustomRendererFactory
+import com.neilturner.aerialviews.services.PhilipsMediaCodecAdapterFactory
 import com.neilturner.aerialviews.services.SambaDataSourceFactory
-import com.neilturner.aerialviews.utils.CustomRendererFactory
 import com.neilturner.aerialviews.utils.FileHelper
-import com.neilturner.aerialviews.utils.PhilipsMediaCodecAdapterFactory
 import com.neilturner.aerialviews.utils.WindowHelper
 import kotlin.math.roundToLong
 
@@ -174,7 +174,7 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
     @SuppressLint("UnsafeOptInUsageError")
     private fun setRefreshRate() {
         val frameRate = player.videoFormat?.frameRate
-        val surface = this.holder.surface
+        // val surface = this.holder.surface
 
         if (frameRate == null || frameRate == 0f) {
             Log.i(TAG, "Unable to get video frame rate...")
@@ -321,6 +321,6 @@ class ExoPlayerView(context: Context, attrs: AttributeSet? = null) : SurfaceView
 
     companion object {
         private const val TAG = "ExoPlayerView"
-        const val FADE_DURATION: Long = 1000
+        const val FADE_DURATION: Long = 1200
     }
 }

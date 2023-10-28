@@ -35,6 +35,8 @@ class MigrationHelper(val context: Context) {
         if (lastKnownVersion < 13) release13()
         if (lastKnownVersion < 14) release14()
         if (lastKnownVersion < 15) release15()
+        // if (lastKnownVersion < 16) release16()
+        if (lastKnownVersion < 17) release17()
 
         // After all migrations, set version to latest
         updateKnownVersion(latestVersion)
@@ -146,6 +148,42 @@ class MigrationHelper(val context: Context) {
                 prefs.edit().putString("filename_as_location", "FORMATTED").apply()
             }
             prefs.edit().remove("any_videos_filename_location").apply()
+        }
+    }
+
+    private fun release17() {
+        Log.i(TAG, "Migrating settings for release 17")
+
+        // Location
+        val locationUsed = prefs.contains("location_style")
+        if (locationUsed) {
+            val locationStyle = prefs.getString("location_style", "POI").toStringOrEmpty()
+            if (locationStyle.contains("DISABLED")) {
+                Log.i(TAG, "Location disabled so removing overlay from default slot")
+                prefs.edit().putString("location_style", "POI").apply()
+                prefs.edit().putString("slot_bottom_right1", "EMPTY").apply()
+            } else {
+                Log.i(TAG, "No change to location as default is used")
+            }
+        }
+
+        // Clock
+        val clockUsed = prefs.contains("show_clock")
+        if (clockUsed) {
+            val clockEnabled = prefs.getBoolean("show_clock", false)
+            if (!clockEnabled) {
+                Log.i(TAG, "Clock disabled so removing overlay from default slot")
+                prefs.edit().putString("slot_bottom_left1", "EMPTY").apply()
+            } else {
+                Log.i(TAG, "Set new clock prefs")
+                val textSize = prefs.getString("clock_size", "18")
+                if (textSize == "36") {
+                    Log.i(TAG, "Clock text size at old default, updating to new size")
+                    prefs.edit().putString("clock_size", "18").apply()
+                } else {
+                    Log.i(TAG, "Clock text size is custom, leaving alone")
+                }
+            }
         }
     }
 

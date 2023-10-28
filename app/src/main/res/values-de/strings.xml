@@ -29,6 +29,9 @@
     <string name="settings_preview_screensaver">Teste die Einstellungen des Bildschirmschoners</string>
     <string name="settings_system_options">Öffne die Systemeinstellungen des Bildschirmschoners</string>
 
+    <string name="settings_system_options_error">Unable to open your device\'s screensaver options</string>
+    <string name="settings_system_options_removed">This feature was removed by the manufacturer\nPlease visit the Aerial Views website for more details</string>
+
     <!-- Main / Video Sources -->
     <string name="category_remote">Internet</string>
     <string name="category_local">Lokal</string>
@@ -84,13 +87,33 @@
     <string name="local_videos_media_store_filter_folder_title">Verzeichnisnamen einstellen</string>
     <string name="local_videos_media_store_filter_folder_summary">Speicherst du Videos zum Beispiel unter /Videos/Aerial/ wird \'Aerial\' Videos anderer Ordner herausfiltern</string>
 
-    <string name="local_videos_legacy_summary">Wähle einen einzigen Ordner für gespeicherte Videos (Android 12 oder niedriger)</string>
+    <string name="local_videos_legacy_summary">Wähle einen einzigen Ordner für gespeicherte Videos</string>
 
     <string name="local_videos_legacy_volume_title">Laufwerk wählen</string>
     <string name="local_videos_legacy_volume_summary">Kein Laufwerk gewählt</string>
 
+    <string name="local_videos_legacy_all_entry">All volumes</string>
+
     <string name="local_videos_legacy_folder_title">Ordner wählen (z.B. /videos)</string>
     <string name="local_videos_legacy_folder_summary">Kein Ordner gewählt</string>
+
+    <string name="local_videos_legacy_no_volume">Volume not specified</string>
+    <string name="local_videos_legacy_no_folder">Folder not specified</string>
+    <string name="local_videos_legacy_no_folder_found">Folder does not exist</string>
+    <string name="local_videos_legacy_no_files_found">No files found</string>
+
+    <string name="local_videos_legacy_test_summary1">Videos found in folder: %1$s</string>
+    <string name="local_videos_legacy_test_summary2">Videos with unsupported file extensions: %1$s</string>
+    <string name="local_videos_legacy_test_summary3">Videos selected for playback: %1$s</string>
+
+    <string name="local_videos_media_store_no_folder">No folder specified for filter</string>
+    <string name="local_videos_media_store_test_summary1">Videos found by media scanner: %1$s</string>
+    <string name="local_videos_media_store_test_summary2">Videos with unsupported file extensions: %1$s</string>
+    <string name="local_videos_media_store_test_summary3">Videos removed by filter: %1$s</string>
+    <string name="local_videos_media_store_test_summary4">Videos selected for playback: %1$s</string>
+
+    <string name="local_videos_permission_denied">Permission Denied</string>
+    <string name="local_videos_test_results">Test results</string>
 
     <!-- Main / Video Sources / Samba videos -->
     <string name="category_server_details">Serverdetails und Zugangsdaten</string>
@@ -119,6 +142,22 @@
     <string name="samba_videos_import_export_settings_summary">SMB-Zugangsdaten im Downloadordner Sichern oder daraus Wiederherstellen</string>
 
     <string name="samba_videos_test_connection">Teste Verbindungseinstellungen</string>
+
+    <string name="samba_videos_import_failed">Import failed</string>
+    <string name="samba_videos_import_success">Import successful</string>
+    <string name="samba_videos_unable_to_save">Unable to save imported settings</string>
+    <string name="samba_videos_file_not_found">Can\'t find SMB settings file in Downloads folder: %1$s</string>
+    <string name="samba_videos_error_parsing">Error while reading and parsing file. Please check the file again for mistakes or invalid characters.</string>
+    <string name="samba_videos_import_save_success">SMB settings successfully imported from: %1$s</string>
+
+    <string name="samba_videos_export_failed">Export failed</string>
+    <string name="samba_videos_export_success">Export successful</string>
+    <string name="samba_videos_file_already_exists">The SMB settings file %1$s already exists in the Downloads folder</string>
+    <string name="samba_videos_unable_to_write">Error while trying to write SMB settings to %1$s in the Downloads folder</string>
+    <string name="samba_videos_export_write_success">Successfully exported SMB settings to %1$s in the Downloads folder</string>
+
+    <string name="samba_videos_permission_denied">Permission Denied</string>
+    <string name="samba_videos_test_results">Test results</string>
 
     <!-- Main / Video Sources / WebDAV videos -->
 
@@ -149,12 +188,22 @@
     <!-- Main / Settings / Appearance -->
     <string name="category_appearance">Aussehen</string>
     <string name="category_overlays">Bildüberlagerungen</string>
+    <string name="category_slots">Slots</string>
+
+    <string name="appearance_top_row_title">Top Row</string>
+    <string name="appearance_top_row_summary">Choose overlays for the top left &amp; right of the screen</string>
+
+    <string name="appearance_bottom_row_title">Bottom Row</string>
+    <string name="appearance_bottom_row_summary">Choose overlays for the bottom left &amp; right of the screen</string>
 
     <string name="appearance_clock_title">Uhr</string>
     <string name="appearance_clock_summary">Zeige aktuelle Zeit an</string>
 
     <string name="appearance_location_title">Ort</string>
     <string name="appearance_location_summary">Zeige Ort oder Sehenswürdigkeiten an</string>
+
+    <string name="appearance_date_title">Date</string>
+    <string name="appearance_date_summary">Display the current date</string>
 
     <string name="appearance_weather_title">Wetter</string>
     <string name="appearance_weather_summary">Zeige aktuelle Wetterbedingungen an</string>
@@ -171,16 +220,46 @@
     <string name="appearance_alt_text_position_title">Alternative Textposition</string>
     <string name="appearance_alt_text_position_summary">Position von Uhr und Standort nach jedem Video ändern um Einbrennen zu verhindern (OLED)</string>
 
+    <!-- Main / Settings / Appearance / Rows -->
+    <string name="category_top_row_left">Top Left</string>
+    <string name="category_top_row_right">Top Right</string>
+
+    <string name="category_bottom_row_left">Bottom Left</string>
+    <string name="category_bottom_row_right">Bottom Right</string>
+
+    <string name="appearance_slot1_title">Lower Slot</string>
+    <string name="appearance_slot2_title">Upper Slot</string>
+    <string name="appearance_slot_summary">Empty</string>
+
+    <string name="appearance_bottom_left_lower_slot">Bottom Left, Lower Slot</string>
+    <string name="appearance_bottom_left_upper_slot">Bottom Left, Upper Slot</string>
+    <string name="appearance_bottom_right_lower_slot">Bottom Right, Lower Slot</string>
+    <string name="appearance_bottom_right_upper_slot">Bottom Right, Upper Slot</string>
+    <string name="appearance_top_left_lower_slot">Top Left, Lower Slot</string>
+    <string name="appearance_top_left_upper_slot">Top Left, Upper Slot</string>
+    <string name="appearance_top_right_lower_slot">Top Right, Lower Slot</string>
+    <string name="appearance_top_right_upper_slot">Top Right, Upper Slot</string>
+
     <!-- Main / Settings / Appearance / Clock -->
     <string name="category_clock">Uhr</string>
-
-    <string name="appearance_show_clock_title">Zeige Uhr</string>
-    <string name="appearance_show_clock_summary">Zeigt die aktuelle Zeit</string>
+    <string name="appearance_clock_format_title">Clock format</string>
 
     <string name="appearance_show_force_latin_digits_title">Lateinische Ziffern erzwingen</string>
     <string name="appearance_show_force_latin_digits_summary">Eingestellte Systemsprache ignorieren und immer Westliche Ziffern verwenden</string>
 
     <string name="appearance_clock_size_title">Textgröße der Uhrzeit anpassen</string>
+
+    <!-- Main / Settings / Appearance / Date -->
+    <string name="category_date">Date</string>
+    <string name="category_custom_format">Custom format</string>
+
+    <string name="appearance_date_format_title">Date format</string>
+    <string name="appearance_date_custom_title">Specify a custom date format</string>
+    <string name="appearance_date_notice_summary">For more information on date formats, search for \'Android SimpleDateFormat\'</string>
+    <string name="appearance_date_size_title">Adjust the size of the date text</string>
+
+    <string name="appearance_date_custom_error">Invalid custom date format!</string>
+    <string name="appearance_date_custom_example">e.g.</string> // For example
 
     <!-- Main / Settings / Appearance / Location -->
     <string name="category_apple_and_community_videos">Apple und Community-Videos</string>
@@ -237,6 +316,8 @@
 
     <string name="playlist_allow_playback_speed_change_title">Geschwindigkeitsänderung während der Wiedergabe</string>
     <string name="playlist_allow_playback_speed_change_summary">Ändere die Wiedergabegeschwindigkeit (Hoch / Runter auf dem D-Pad der Fernbedienung)</string>
+
+    <string name="playlist_playback_speed_changed">Playback speed changed to: %1$s</string>
 
     <!-- Main / Settings / Device capabilities -->
     <string name="category_capabilities">TV-Funktionen</string>

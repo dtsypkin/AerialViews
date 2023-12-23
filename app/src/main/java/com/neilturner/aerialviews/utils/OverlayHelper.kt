@@ -15,6 +15,7 @@ import com.neilturner.aerialviews.ui.overlays.AltTextClock
 import com.neilturner.aerialviews.ui.overlays.TextDate
 import com.neilturner.aerialviews.ui.overlays.TextLocation
 import com.neilturner.aerialviews.ui.overlays.TextMessage
+import com.neilturner.aerialviews.ui.overlays.TextWeather
 
 class OverlayHelper(private val context: Context, private val font: Typeface?, private val prefs: GeneralPrefs) {
 
@@ -114,6 +115,10 @@ class OverlayHelper(private val context: Context, private val font: Typeface?, p
                 setTextSize(TypedValue.COMPLEX_UNIT_SP, prefs.messageSize.toFloat())
                 typeface = font
                 this.type = type
+            }
+            OverlayType.WEATHER -> TextWeather(context).apply {
+                setTextSize(TypedValue.COMPLEX_UNIT_SP, prefs.dateSize.toFloat())
+                typeface = font
             }
             else -> return null
         }

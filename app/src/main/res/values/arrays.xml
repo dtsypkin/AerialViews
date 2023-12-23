@@ -101,6 +101,7 @@
         <item>Date</item>
         <item>Message Line 1</item>
         <item>Message Line 2</item>
+        <item>Weather</item>
     </string-array>
     <string-array name="slot_values" translatable="false">
         <item>EMPTY</item>
@@ -109,6 +110,7 @@
         <item>DATE</item>
         <item>MESSAGE1</item>
         <item>MESSAGE2</item>
+        <item>WEATHER</item>
     </string-array>
     <string name="slot_default" translatable="false">EMPTY</string>
 

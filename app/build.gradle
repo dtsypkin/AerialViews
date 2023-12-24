@@ -1,10 +1,13 @@
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'org.jmailen.kotlinter'
-apply plugin: 'de.mannodermaus.android-junit5'
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "com.google.devtools.ksp"
+    id "kotlin-kapt"
+    id "com.google.gms.google-services"
+    id "com.google.firebase.crashlytics"
+    id "org.jmailen.kotlinter"
+    id "de.mannodermaus.android-junit5"
+}
 
 android {
     namespace 'com.neilturner.aerialviews'
@@ -149,6 +152,15 @@ dependencies {
 
     // GSON
     implementation('com.google.code.gson:gson:2.10.1')
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
+
+    // Moshi
+    def moshiVersion = '1.15.0'
+    implementation("com.squareup.moshi:moshi:$moshiVersion")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
 
     // ExoPlayer
     implementation('androidx.media3:media3-exoplayer:1.2.0')
